@@ -4,13 +4,19 @@
 
 :root {
   --gy-bg-a: #060b16;
-  --gy-bg-b: #0f1f3a;
-  --gy-text: #edf2ff;
-  --gy-muted: #b5c2e5;
-  --gy-primary: #4f46e5;
+  --gy-bg-b: #0a0f1d;
+  --gy-bg-c: #1e293b;
+  --gy-text: #f8fafc;
+  --gy-muted: #94a3b8;
+  --gy-primary: #6366f1;
   --gy-secondary: #06b6d4;
-  --gy-danger: #f97393;
-  --gy-success: #34d399;
+  --gy-accent: #f59e0b;
+  --gy-danger: #ef4444;
+  --gy-success: #10b981;
+  --gy-glass: rgba(15, 23, 42, 0.7);
+  --gy-glass-border: rgba(255, 255, 255, 0.1);
+  --gy-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.5);
+  --gy-font-mono: 'JetBrains Mono', monospace;
 }
 
 * {
@@ -52,13 +58,14 @@ p {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  gap: 1rem;
-  margin-bottom: 1.2rem;
-  padding: 0.7rem 0.9rem;
-  border: 1px solid rgba(255, 255, 255, 0.14);
-  border-radius: 16px;
-  background: rgba(8, 13, 25, 0.78);
-  backdrop-filter: blur(10px);
+  gap: 1.5rem;
+  margin-bottom: 2rem;
+  padding: 0.75rem 1.5rem;
+  border: 1px solid var(--gy-glass-border);
+  border-radius: 20px;
+  background: var(--gy-glass);
+  backdrop-filter: blur(16px);
+  box-shadow: var(--gy-shadow);
 }
 
 .gy-brand {
@@ -113,9 +120,19 @@ p {
 
 .gy-card {
   @include mixins.gy-card;
-  animation: gy-fade-up 0.32s ease;
-  border-radius: 18px;
-  background: linear-gradient(165deg, rgba(79, 70, 229, 0.16), rgba(15, 23, 42, 0.75));
+  animation: gy-fade-up 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0));
+  border: 1px solid var(--gy-glass-border);
+  backdrop-filter: blur(12px);
+  padding: 1.5rem;
+  transition: transform 0.3s ease, box-shadow 0.3s ease, border-color 0.3s ease;
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6);
+    border-color: rgba(99, 102, 241, 0.4);
+  }
 }
 
 .gy-muted {
@@ -142,14 +159,28 @@ p {
 }
 
 .gy-btn {
-  background: linear-gradient(100deg, var(--gy-primary), var(--gy-secondary));
-  border: 1px solid transparent;
+  background: linear-gradient(135deg, var(--gy-primary), var(--gy-secondary));
+  border: 1px solid rgba(255, 255, 255, 0.1);
   color: white;
-  padding: 0.62rem 0.92rem;
-  border-radius: 12px;
+  padding: 0.75rem 1.5rem;
+  border-radius: 14px;
   cursor: pointer;
   font-weight: 700;
-  transition: transform 0.15s ease, opacity 0.2s ease;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+  font-size: 0.85rem;
+  transition: all 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 15px rgba(99, 102, 241, 0.3);
+
+  &:hover {
+    transform: translateY(-2px) scale(1.02);
+    box-shadow: 0 8px 25px rgba(99, 102, 241, 0.5);
+    filter: brightness(1.1);
+  }
+
+  &:active {
+    transform: translateY(0) scale(0.98);
+  }
 }
 
 .gy-btn:hover {
@@ -731,6 +762,7 @@ p {
     align-items: stretch;
   }
 }
+
 /* Game format overhaul */
 :root {
   --gy-accent: #f97316;
@@ -898,6 +930,7 @@ body {
 }
 
 @media (max-width: 920px) {
+
   .gy-app-shell,
   .app-shell {
     width: min(1180px, 95vw);
