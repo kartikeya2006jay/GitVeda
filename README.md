@@ -1,4 +1,4 @@
-# GitYatra
+# GitVeda
 
 Gamified Git learning platform built with React + Vite + Firebase.
 

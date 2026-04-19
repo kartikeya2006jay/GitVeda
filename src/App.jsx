@@ -28,7 +28,7 @@ export default function App() {
         <header className="gy-topbar">
           <Link className="gy-brand" to="/">
             <span className="gy-brand-badge">GY</span>
-            <span>GitYatra</span>
+            <span>GitVeda</span>
           </Link>
           <nav className="gy-nav">
             <NavLink to="/" end>Home</NavLink>

@@ -1,4 +1,4 @@
-export const APP_NAME = "GitYatra";
+export const APP_NAME = "GitVeda";
 export const XP_PER_LEVEL = 100;
 export const THEME = {
   bg: "#0b1220",

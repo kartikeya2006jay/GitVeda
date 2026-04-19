@@ -2,7 +2,7 @@ import { useCallback, useMemo, useReducer, useRef } from "react";
 
 const initialTerminal = {
   input: "",
-  lines: ["Welcome to GitYatra terminal. Type: git init"],
+  lines: ["Welcome to GitVeda terminal. Type: git init"],
   history: [],
   historyIndex: -1,
 };
