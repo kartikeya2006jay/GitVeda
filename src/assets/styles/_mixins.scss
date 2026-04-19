@@ -1,0 +1,7 @@
+@mixin gy-card {
+  background: linear-gradient(145deg, rgba(139, 92, 246, 0.12), rgba(59, 130, 246, 0.12));
+  border: 1px solid rgba(255, 255, 255, 0.14);
+  border-radius: var(--gy-radius);
+  padding: 1rem;
+  backdrop-filter: blur(6px);
+}
