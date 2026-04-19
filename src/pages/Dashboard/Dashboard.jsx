@@ -1,88 +1,78 @@
 import { Link } from "react-router-dom";
-import StatsCard from "../../components/dashboard/StatsCard/StatsCard";
-import { gameLevels, hardLevels, mediumLevels, easyLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
 
 export default function Dashboard() {
-  const { progress, gitState } = useGameContext();
-  const currentLevel = gameLevels[Math.min(progress.level - 1, gameLevels.length - 1)] || gameLevels[0];
-  const completion = Math.min(100, Math.round((progress.level / gameLevels.length) * 100));
+  const { progress } = useGameContext();
 
   return (
-    <main className="gy-grid" style={{ gap: '2rem' }}>
+    <main className="gy-grid" style={{ gap: '2.5rem' }}>
       <header>
-        <p className="gy-kicker" style={{ color: 'var(--gy-primary)', fontWeight: 700 }}>PLAYER COMMAND CENTER</p>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>Welcome back, Operator.</h1>
+        <p className="gy-kicker" style={{ color: 'var(--gy-primary)', fontWeight: 800, letterSpacing: '0.4em' }}>COMMAND CENTER</p>
+        <h1 style={{ fontSize: '3rem', fontWeight: 900 }}>Mission Control Console</h1>
       </header>
 
-      <section className="gy-grid gy-grid-3">
-        <StatsCard label="MISSION RANK" value={`Level ${progress.level}`} />
-        <StatsCard label="TOTAL XP" value={`${progress.xp.toLocaleString()} XP`} />
-        <StatsCard label="GIT LOGS" value={gitState.commits.length} />
-      </section>
-
-      <section className="gy-card" style={{
-        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(15, 23, 42, 0.9))',
-        border: '1px solid rgba(99, 102, 241, 0.2)'
-      }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-end', marginBottom: '1rem' }}>
-          <div>
-            <p className="gy-kicker" style={{ color: 'var(--gy-secondary)' }}>CAMPAIGN PROGRESS</p>
-            <h2 style={{ fontSize: '1.8rem' }}>{completion}% Mastery</h2>
-          </div>
-          <p style={{ color: 'var(--gy-muted)', fontSize: '0.9rem' }}>{progress.level} / {gameLevels.length} Missions Completed</p>
-        </div>
-
-        <div className="gy-progress-track" style={{ height: '12px', background: 'rgba(255,255,255,0.05)', borderRadius: '6px', overflow: 'hidden' }}>
-          <div className="gy-progress-fill" style={{
-            width: `${completion}%`,
-            height: '100%',
-            background: 'linear-gradient(90deg, var(--gy-primary), var(--gy-secondary))',
-            boxShadow: '0 0 15px rgba(99, 102, 241, 0.5)'
-          }} />
-        </div>
-
-        <div className="gy-pill-row" style={{ marginTop: '1.5rem' }}>
-          <span className="gy-pill" style={{ opacity: progress.level > 10 ? 1 : 0.5 }}>Easy: 10/10</span>
-          <span className="gy-pill" style={{ opacity: progress.level > 20 ? 1 : 0.5 }}>Medium: {Math.max(0, Math.min(10, progress.level - 10))}/10</span>
-          <span className="gy-pill" style={{ opacity: progress.level > 30 ? 1 : 0.5 }}>Hard: {Math.max(0, progress.level - 20)}/10</span>
-        </div>
-      </section>
-
-      <section className="gy-grid gy-grid-2">
-        <article className="gy-card" style={{ position: 'relative', overflow: 'hidden' }}>
-          <div style={{ position: 'absolute', top: '1rem', right: '1rem' }}>
-            <span className="gy-pill" style={{ background: 'var(--gy-primary)', color: '#fff', border: 'none' }}>CURRENT TARGET</span>
-          </div>
-          <p className="gy-kicker">MISSION {currentLevel.level}</p>
-          <h3 style={{ fontSize: '1.5rem', marginBottom: '0.5rem' }}>{currentLevel.command}</h3>
-          <p className="gy-muted" style={{ marginBottom: '1.5rem' }}>{currentLevel.mission}</p>
-
-          <div style={{ padding: '1rem', background: 'rgba(0,0,0,0.2)', borderRadius: '12px', marginBottom: '1.5rem' }}>
-            <p style={{ fontSize: '0.85rem', marginBottom: '0.5rem', color: 'var(--gy-accent)' }}>INTELLIGENCE BRIEF:</p>
-            <p style={{ fontSize: '0.9rem' }}>{currentLevel.question}</p>
-          </div>
-
-          <Link className="gy-btn" to={`/challenge/${currentLevel.id}`} style={{ width: '100%', textAlign: 'center' }}>Deploy to Terminal</Link>
-        </article>
-
-        <article className="gy-card">
-          <h3>Neural Unlocks</h3>
-          <p className="gy-muted" style={{ marginBottom: '1.5rem' }}>Advance your rank to unlock advanced training tracks.</p>
-
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-            <div style={{ opacity: 0.5, padding: '0.75rem', border: '1px dashed var(--gy-glass-border)', borderRadius: '10px' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.9rem' }}>Locked: Final Revision Track</p>
-              <p style={{ fontSize: '0.8rem' }}>Requires Level 30</p>
+      <div className="gy-grid gy-grid-2" style={{ alignItems: 'start', gap: '2rem' }}>
+        <section className="gy-card" style={{
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0,0,0,0.6))',
+          padding: '2.5rem',
+          border: '1px solid rgba(99, 102, 241, 0.3)'
+        }}>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '2rem' }}>Operational Progress</h3>
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem' }}>
+            <div>
+              <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.75rem' }}>
+                <span className="gy-muted">CAMPAIGN COMPLETION</span>
+                <span style={{ fontWeight: 800 }}>{Math.round(((progress.level - 1) / 30) * 100)}%</span>
+              </div>
+              <div style={{ width: '100%', height: '10px', background: 'rgba(255,255,255,0.05)', borderRadius: '10px', overflow: 'hidden' }}>
+                <div style={{ width: `${((progress.level - 1) / 30) * 100}%`, height: '100%', background: 'linear-gradient(90deg, var(--gy-primary), var(--gy-secondary))', borderRadius: 'inherit', boxShadow: '0 0 15px var(--gy-primary)' }}></div>
+              </div>
             </div>
-            <div style={{ opacity: 0.5, padding: '0.75rem', border: '1px dashed var(--gy-glass-border)', borderRadius: '10px' }}>
-              <p style={{ fontWeight: 700, fontSize: '0.9rem' }}>Locked: Practice Arena</p>
-              <p style={{ fontSize: '0.8rem' }}>Requires Level 10</p>
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem', marginTop: '1rem' }}>
+              <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid var(--gy-glass-border)' }}>
+                <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>XP BALANCE</p>
+                <p style={{ fontSize: '1.8rem', fontWeight: 900 }}>{progress.xp.toLocaleString()}</p>
+              </div>
+              <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid var(--gy-glass-border)' }}>
+                <p className="gy-kicker" style={{ color: 'var(--gy-success)' }}>CURRENT STREAK</p>
+                <p style={{ fontSize: '1.8rem', fontWeight: 900 }}>{progress.streakDays} DAYS 🔥</p>
+              </div>
             </div>
           </div>
+        </section>
 
-          <Link className="gy-btn gy-btn-ghost" to="/challenges" style={{ width: '100%', textAlign: 'center', marginTop: '1.5rem' }}>View Full Operational Map</Link>
-        </article>
+        <section className="gy-card" style={{
+          background: 'linear-gradient(135deg, rgba(6, 182, 212, 0.05), rgba(0,0,0,0.6))',
+          padding: '2.5rem',
+          border: '1px solid rgba(6, 182, 212, 0.2)'
+        }}>
+          <p className="gy-kicker" style={{ color: 'var(--gy-accent)' }}>NEXT OBJECTIVE</p>
+          <h3 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '1rem' }}>Initiate Mission {progress.level}</h3>
+          <p className="gy-muted" style={{ fontSize: '1.1rem', marginBottom: '2.5rem' }}>
+            System state suggests current protocol mastery is
+            {progress.level <= 10 ? " foundational" : progress.level <= 20 ? " advanced" : " expert"}.
+            Prepare for next synchronization.
+          </p>
+          <Link to="/challenges" className="gy-btn" style={{ width: '100%', textAlign: 'center' }}>DEPLOY TO ARENA</Link>
+        </section>
+      </div>
+
+      <section className="gy-card">
+        <h3 style={{ marginBottom: '2rem' }}>Protocol History</h3>
+        <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+          {[1, 2, 3].map(i => (
+            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid transparent', hover: { borderColor: 'var(--gy-glass-border)' } }}>
+              <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                <span style={{ padding: '0.5rem 0.75rem', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--gy-primary)', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>SUCCESS</span>
+                <div>
+                  <p style={{ fontWeight: 800, margin: 0 }}>MISSION 0{i} VALIDATED</p>
+                  <p className="gy-muted" style={{ fontSize: '0.8rem', margin: 0 }}>Neural synchronization complete. Records updated.</p>
+                </div>
+              </div>
+              <span style={{ fontSize: '0.8rem', color: 'var(--gy-muted)' }}>{i} DAYS AGO</span>
+            </div>
+          ))}
+        </div>
       </section>
     </main>
   );

@@ -1,6 +1,5 @@
 import { useAuth } from "../../hooks";
 import { useGameContext } from "../../context";
-import { gameLevels } from "../../data/levels";
 
 export default function Profile() {
   const { user } = useAuth();
@@ -8,79 +7,110 @@ export default function Profile() {
 
   const rank = progress.level <= 10 ? "Novice Commit-er" : progress.level <= 20 ? "Workflow Architect" : "Git Legend";
   const badges = [
-    { name: "First Commit", icon: "🌱", earned: true },
-    { name: "Branch Explorer", icon: "🌿", earned: progress.level > 10 },
-    { name: "Conflict Resolver", icon: "⚔️", earned: progress.level > 15 },
-    { name: "Reflog Time-Traveler", icon: "⏳", earned: progress.level > 25 },
-    { name: "Git Master", icon: "👑", earned: progress.level >= 30 },
+    { name: "First Commit", icon: "🌱", earned: true, color: "var(--gy-success)" },
+    { name: "Branch Explorer", icon: "🌿", earned: progress.level > 10, color: "var(--gy-primary)" },
+    { name: "Conflict Resolver", icon: "⚔️", earned: progress.level > 15, color: "var(--gy-danger)" },
+    { name: "Reflog Time-Traveler", icon: "⏳", earned: progress.level > 25, color: "var(--gy-accent)" },
+    { name: "Git Master", icon: "👑", earned: progress.level >= 30, color: "#fff" },
   ];
 
   return (
-    <main className="gy-grid" style={{ gap: '2rem' }}>
-      <header>
-        <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>OPERATOR PROFILE</p>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>{user?.displayName || "Git Enthusiast"}</h1>
+    <main className="gy-grid" style={{ gap: '3rem' }}>
+      <header style={{ textAlign: 'center' }}>
+        <p className="gy-kicker" style={{ color: 'var(--gy-primary)', fontWeight: 800, letterSpacing: '0.4em' }}>OPERATOR DOSSIER</p>
+        <h1 style={{ fontSize: '4rem', fontWeight: 900, marginBottom: '0.5rem', background: 'linear-gradient(to bottom, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          {user?.displayName || "Kartikeya Yadav"}
+        </h1>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '0.5rem' }}>
+          <span className="gy-pill" style={{ background: 'rgba(99, 102, 241, 0.1)', color: 'var(--gy-primary)', border: '1px solid rgba(99, 102, 241, 0.3)' }}>{rank}</span>
+          <span className="gy-pill" style={{ background: 'rgba(245, 158, 11, 0.1)', color: 'var(--gy-accent)', border: '1px solid rgba(245, 158, 11, 0.3)' }}>STREAK: {progress.streakDays} DAYS</span>
+        </div>
       </header>
 
-      <div className="gy-grid gy-grid-2" style={{ alignItems: 'start' }}>
-        <section className="gy-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          <div style={{ width: '80px', height: '80px', borderRadius: '24px', background: 'linear-gradient(135deg, var(--gy-primary), var(--gy-secondary))', display: 'grid', placeItems: 'center', fontSize: '2.5rem' }}>
+      <div className="gy-grid gy-grid-2" style={{ alignItems: 'start', gap: '2rem' }}>
+        <section className="gy-card" style={{
+          display: 'flex',
+          flexDirection: 'column',
+          gap: '1.5rem',
+          background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(0,0,0,0.6))',
+          padding: '2.5rem'
+        }}>
+          <div style={{
+            width: '120px',
+            height: '120px',
+            borderRadius: '35px',
+            background: 'linear-gradient(135deg, var(--gy-primary), var(--gy-secondary))',
+            display: 'grid',
+            placeItems: 'center',
+            fontSize: '3.5rem',
+            margin: '0 auto',
+            boxShadow: '0 0 40px rgba(99, 102, 241, 0.4)',
+            border: '2px solid rgba(255,255,255,0.2)'
+          }}>
             {user?.photoURL ? <img src={user.photoURL} alt="Avatar" style={{ width: '100%', height: '100%', borderRadius: 'inherit' }} /> : "👨‍🚀"}
           </div>
-          <div>
-            <h2 style={{ fontSize: '1.5rem', marginBottom: '0.25rem' }}>{user?.email || "anonymous@gitveda.dev"}</h2>
-            <p className="gy-muted" style={{ fontWeight: 600, color: 'var(--gy-primary)' }}>{rank}</p>
+
+          <div style={{ textAlign: 'center' }}>
+            <h2 style={{ fontSize: '1.4rem', fontWeight: 800 }}>{user?.email || "kartikeya2006jay@gmail.com"}</h2>
           </div>
-          <hr style={{ border: 'none', borderTop: '1px solid var(--gy-glass-border)', margin: '1rem 0' }} />
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>Total XP:</span>
-            <span style={{ fontWeight: 800, color: 'var(--gy-accent)' }}>{progress.xp.toLocaleString()}</span>
-          </div>
-          <div style={{ display: 'flex', justifyContent: 'space-between' }}>
-            <span>Missions Completed:</span>
-            <span style={{ fontWeight: 800 }}>{progress.level - 1} / 30</span>
+
+          <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem', marginTop: '1rem' }}>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '15px' }}>
+              <span className="gy-muted">ACCUMULATED XP</span>
+              <span style={{ fontWeight: 900, color: 'var(--gy-accent)', fontSize: '1.1rem' }}>{progress.xp.toLocaleString()}</span>
+            </div>
+            <div style={{ display: 'flex', justifyContent: 'space-between', padding: '1rem', background: 'rgba(255,255,255,0.03)', borderRadius: '15px' }}>
+              <span className="gy-muted">MISSIONS COMPLETED</span>
+              <span style={{ fontWeight: 900, fontSize: '1.1rem' }}>{progress.level - 1} / 30</span>
+            </div>
           </div>
         </section>
 
-        <section className="gy-card">
-          <h3 style={{ marginBottom: '1.5rem' }}>Achievement Hall</h3>
-          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(140px, 1fr))', gap: '1rem' }}>
+        <section className="gy-card" style={{ padding: '2rem' }}>
+          <h3 style={{ fontSize: '1.6rem', fontWeight: 800, marginBottom: '2rem', display: 'flex', alignItems: 'center', gap: '0.75rem' }}>
+            <span style={{ color: 'var(--gy-primary)' }}>Achievement</span> Hall
+          </h3>
+          <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(130px, 1fr))', gap: '1.25rem' }}>
             {badges.map((badge, i) => (
               <div key={i} style={{
-                padding: '1rem',
-                borderRadius: '16px',
-                background: badge.earned ? 'rgba(255,255,255,0.05)' : 'rgba(0,0,0,0.2)',
-                border: badge.earned ? '1px solid var(--gy-primary)' : '1px solid transparent',
+                padding: '1.5rem 1rem',
+                borderRadius: '24px',
+                background: badge.earned ? 'rgba(99, 102, 241, 0.1)' : 'rgba(0,0,0,0.3)',
+                border: badge.earned ? `1px solid ${badge.color}` : '1px solid var(--gy-glass-border)',
                 textAlign: 'center',
-                opacity: badge.earned ? 1 : 0.3
+                opacity: badge.earned ? 1 : 0.2,
+                transition: 'all 0.3s ease',
+                boxShadow: badge.earned ? `0 0 20px ${badge.color}22` : 'none'
               }}>
-                <div style={{ fontSize: '2rem', marginBottom: '0.5rem' }}>{badge.icon}</div>
-                <p style={{ fontSize: '0.75rem', fontWeight: 700 }}>{badge.name}</p>
-                {badge.earned && <p style={{ fontSize: '0.6rem', color: 'var(--gy-success)', marginTop: '0.2rem' }}>EARNED</p>}
+                <div style={{ fontSize: '2.5rem', marginBottom: '0.75rem', filter: badge.earned ? 'none' : 'grayscale(1)' }}>{badge.icon}</div>
+                <p style={{ fontSize: '0.8rem', fontWeight: 800, color: badge.earned ? '#fff' : 'var(--gy-muted)' }}>{badge.name}</p>
               </div>
             ))}
           </div>
         </section>
       </div>
 
-      <section className="gy-card" style={{ background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.05), rgba(15, 23, 42, 0.8))' }}>
-        <h3>Operational Statistics</h3>
-        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '1rem', marginTop: '1.5rem' }}>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-kicker">COMMITS</p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 800 }}>{Math.floor(progress.xp / 100)}</p>
+      <section className="gy-card" style={{
+        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(15, 23, 42, 0.9))',
+        padding: '3rem'
+      }}>
+        <h3 style={{ fontSize: '1.8rem', fontWeight: 800, marginBottom: '2rem' }}>Operational Telemetry</h3>
+        <div style={{ display: 'grid', gridTemplateColumns: 'repeat(4, 1fr)', gap: '2rem' }}>
+          <div className="telemetry-item">
+            <p className="gy-kicker" style={{ color: 'var(--gy-secondary)' }}>COMMITS</p>
+            <p style={{ fontSize: '2.5rem', fontWeight: 900 }}>{Math.floor(progress.xp / 100)}</p>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-kicker">PRs</p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 800 }}>{Math.floor(progress.level / 2)}</p>
+          <div className="telemetry-item">
+            <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>PULL REQUESTS</p>
+            <p style={{ fontSize: '2.5rem', fontWeight: 900 }}>{Math.floor(progress.level / 2)}</p>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-kicker">MERGES</p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 800 }}>{Math.floor(progress.level / 3)}</p>
+          <div className="telemetry-item">
+            <p className="gy-kicker" style={{ color: 'var(--gy-accent)' }}>MERGE CONFLICTS</p>
+            <p style={{ fontSize: '2.5rem', fontWeight: 900 }}>{Math.floor(progress.level / 3)}</p>
           </div>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-kicker">STREAK</p>
-            <p style={{ fontSize: '1.5rem', fontWeight: 800 }}>4 Days</p>
+          <div className="telemetry-item">
+            <p className="gy-kicker" style={{ color: 'var(--gy-success)' }}>ACTIVE STREAK</p>
+            <p style={{ fontSize: '2.5rem', fontWeight: 900, color: 'var(--gy-success)' }}>{progress.streakDays}🔥</p>
           </div>
         </div>
       </section>

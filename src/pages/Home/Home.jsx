@@ -1,72 +1,65 @@
 import { Link } from "react-router-dom";
-import { easyLevels, mediumLevels, hardLevels } from "../../data/levels";
 
 export default function Home() {
   return (
-    <main className="gy-grid">
-      <section className="gy-hero gy-card gy-hero-game" style={{
-        padding: '3.5rem 2.5rem',
-        background: 'radial-gradient(circle at 80% 20%, rgba(99, 102, 241, 0.15), transparent 40%), var(--gy-glass)',
-        overflow: 'hidden',
-        position: 'relative'
-      }}>
-        {/* Animated Background Elements */}
-        <div className="gy-orb gy-orb-1" style={{ top: '-10%', right: '-5%', opacity: 0.4 }}></div>
-        <div className="gy-orb gy-orb-2" style={{ bottom: '10%', left: '-5%', opacity: 0.3 }}></div>
+    <main className="gy-grid" style={{ gap: '4rem', padding: '2rem 0' }}>
+      <section className="gy-home-hero" style={{ textAlign: 'center', position: 'relative', padding: '6rem 0' }}>
+        <div style={{
+          position: 'absolute', top: '50%', left: '50%', transform: 'translate(-50%, -50%)',
+          width: '600px', height: '600px', background: 'radial-gradient(circle, rgba(99, 102, 241, 0.15), transparent 70%)',
+          zIndex: -1, borderRadius: '50%', filter: 'blur(60px)'
+        }}></div>
 
-        <div style={{ position: 'relative', zIndex: 2 }}>
-          <p className="gy-kicker" style={{ color: 'var(--gy-accent)', fontWeight: 800 }}>Missions Initialized // GitVeda Quest</p>
-          <h1 style={{ fontSize: '3.5rem', lineHeight: 1.1, marginBottom: '1.5rem', fontWeight: 800, background: 'linear-gradient(to right, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
-            Level Up Your <br /> Git Intelligence.
-          </h1>
-          <p style={{ maxWidth: '600px', fontSize: '1.1rem', color: 'var(--gy-muted)', marginBottom: '2rem' }}>
-            Interactive command-line mastery through 30 high-stakes missions.
-            From beginner init to advanced rebase rescues.
-          </p>
-          <div className="gy-hero-actions" style={{ gap: '1rem' }}>
-            <Link className="gy-btn" to="/challenges" style={{ padding: '1rem 2rem' }}>Launch Level Map</Link>
-            <Link className="gy-btn gy-btn-ghost" to="/dashboard" style={{ padding: '1rem 2rem' }}>Mission Control</Link>
-          </div>
+        <p className="gy-kicker" style={{ letterSpacing: '0.6em', color: 'var(--gy-primary)', fontWeight: 800 }}>NEURAL PROTOCOL ACTIVE</p>
+        <h1 style={{ fontSize: '5.5rem', fontWeight: 900, lineHeight: 1, marginBottom: '1.5rem', background: 'linear-gradient(to bottom, #fff, #94a3b8)', WebkitBackgroundClip: 'text', WebkitTextFillColor: 'transparent' }}>
+          Master the <br /> <span style={{ color: 'var(--gy-primary)', textShadow: '0 0 40px rgba(99, 102, 241, 0.5)' }}>Git Multiverse</span>
+        </h1>
+        <p style={{ fontSize: '1.4rem', color: 'var(--gy-muted)', maxWidth: '700px', margin: '0 auto 3rem', lineHeight: 1.6 }}>
+          The world's most advanced interactive Git training simulator. Deploy your skills, conquer missions, and become a legendary workflow architect.
+        </p>
 
-          <div className="gy-pill-row" style={{ marginTop: '2.5rem' }}>
-            <span className="gy-pill" style={{ background: 'rgba(16, 185, 129, 0.1)', borderColor: 'var(--gy-success)', color: 'var(--gy-success)' }}>10 Easy</span>
-            <span className="gy-pill" style={{ background: 'rgba(245, 158, 11, 0.1)', borderColor: 'var(--gy-accent)', color: 'var(--gy-accent)' }}>10 Medium</span>
-            <span className="gy-pill" style={{ background: 'rgba(239, 68, 68, 0.1)', borderColor: 'var(--gy-danger)', color: 'var(--gy-danger)' }}>10 Hard</span>
-            <span className="gy-pill" style={{ opacity: 0.8 }}>+ Practice Arena</span>
-          </div>
+        <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem' }}>
+          <Link to="/challenges" className="gy-btn" style={{ padding: '1.25rem 3rem', fontSize: '1.1rem' }}>INITIALIZE MISSION</Link>
+          <Link to="/cheat-notes" className="gy-btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--gy-glass-border)', padding: '1.25rem 3rem', fontSize: '1.1rem' }}>ACCESS INTEL</Link>
         </div>
       </section>
 
-      <section className="gy-grid gy-grid-3">
-        <article className="gy-card" style={{ borderLeft: '4px solid var(--gy-success)' }}>
-          <h3 style={{ color: 'var(--gy-success)' }}>Bootcamp Stage</h3>
-          <p>Master {easyLevels.length} foundational commands like init, add, and commit.</p>
-          <div className="gy-kicker" style={{ marginTop: '1rem' }}>REWARD: +800 XP</div>
+      <div className="gy-grid gy-grid-3" style={{ gap: '2rem' }}>
+        <article className="gy-card" style={{ borderTop: '4px solid var(--gy-primary)' }}>
+          <p style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>⚡</p>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Instant Mastery</h3>
+          <p className="gy-muted">Simulate real-world scenarios in a risk-free neural environment. Learn by doing, not just reading.</p>
         </article>
-        <article className="gy-card" style={{ borderLeft: '4px solid var(--gy-accent)' }}>
-          <h3 style={{ color: 'var(--gy-accent)' }}>Workflow Arena</h3>
-          <p>Collaborate with {mediumLevels.length} scenarios involving remotes, branches, and stashes.</p>
-          <div className="gy-kicker" style={{ marginTop: '1rem' }}>REWARD: +1200 XP</div>
+        <article className="gy-card" style={{ borderTop: '4px solid var(--gy-accent)' }}>
+          <p style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🏆</p>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Gamified Path</h3>
+          <p className="gy-muted">30 levels of increasing complexity. Earn XP, unlock badges, and track your daily streak.</p>
         </article>
-        <article className="gy-card" style={{ borderLeft: '4px solid var(--gy-danger)' }}>
-          <h3 style={{ color: 'var(--gy-danger)' }}>Rescue Protocol</h3>
-          <p>Survive {hardLevels.length} advanced missions: bisect, reflog, and interactive rebase.</p>
-          <div className="gy-kicker" style={{ marginTop: '1rem' }}>REWARD: +1700 XP</div>
+        <article className="gy-card" style={{ borderTop: '4px solid var(--gy-secondary)' }}>
+          <p style={{ fontSize: '2.5rem', marginBottom: '1rem' }}>🛠️</p>
+          <h3 style={{ fontSize: '1.5rem', fontWeight: 800 }}>Advanced Intel</h3>
+          <p className="gy-muted">Deep technical documentation for every command at your fingertips. No more guessing.</p>
         </article>
-      </section>
-
-      <div style={{ textAlign: 'center', margin: '3rem 0 1rem' }}>
-        <p className="gy-kicker">FEATURED COMMANDS</p>
       </div>
 
-      <section className="gy-grid gy-grid-3" style={{ marginBottom: '2rem' }}>
-        {easyLevels.slice(0, 3).map((level) => (
-          <article className="gy-card" key={level.id} style={{ display: 'flex', flexDirection: 'column', gap: '0.5rem', background: 'rgba(255,255,255,0.02)' }}>
-            <span style={{ fontSize: '0.75rem', color: 'var(--gy-primary)', fontWeight: 700 }}>LEVEL {level.level}</span>
-            <code style={{ fontSize: '1.2rem', color: '#fff', fontFamily: 'var(--gy-font-mono)' }}>{level.command}</code>
-            <p className="gy-muted" style={{ fontSize: '0.85rem' }}>{level.mission}</p>
-          </article>
-        ))}
+      <section className="gy-card" style={{
+        background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent)',
+        display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '3rem'
+      }}>
+        <div>
+          <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>SYSTEM STATUS</p>
+          <h2 style={{ fontSize: '2.2rem', fontWeight: 900 }}>READY FOR DEPLOYMENT</h2>
+        </div>
+        <div style={{ display: 'flex', gap: '3rem' }}>
+          <div style={{ textAlign: 'center' }}>
+            <p className="gy-muted" style={{ fontSize: '0.8rem' }}>OPERATORS</p>
+            <p style={{ fontSize: '1.8rem', fontWeight: 800 }}>24,930</p>
+          </div>
+          <div style={{ textAlign: 'center' }}>
+            <p className="gy-muted" style={{ fontSize: '0.8rem' }}>COMMITS</p>
+            <p style={{ fontSize: '1.8rem', fontWeight: 800 }}>1.2M+</p>
+          </div>
+        </div>
       </section>
     </main>
   );
