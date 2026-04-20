@@ -65,18 +65,20 @@
 
 .segmentBase {
     fill: none;
-    stroke: rgba(99, 102, 241, 0.15); // Very subtle dark base
-    stroke-width: 2;
+    stroke: rgba(56, 189, 248, 0.2);
+    stroke-width: 9;
     stroke-linecap: round;
+    stroke-linejoin: round;
 }
 
 .segmentGlow {
     fill: none;
     stroke: url(#gy-neon-path);
-    stroke-width: 16; // Thicker line
+    stroke-width: 24; // Road-like width
     stroke-linecap: round;
+    stroke-linejoin: round;
     filter: url(#gy-electric-blur);
-    opacity: 0.24;
+    opacity: 0.2;
     animation: glowPulse 4s ease-in-out infinite;
 }
 
@@ -84,13 +86,13 @@
 
     0%,
     100% {
-        opacity: 0.25;
-        stroke-width: 12;
+        opacity: 0.18;
+        stroke-width: 22;
     }
 
     50% {
-        opacity: 0.45;
-        stroke-width: 16;
+        opacity: 0.28;
+        stroke-width: 26;
     }
 }
 
@@ -104,10 +106,10 @@
 .segmentActive {
     fill: none;
     stroke: url(#gy-neon-path);
-    stroke-width: 6;
+    stroke-width: 11;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.45));
+    filter: drop-shadow(0 0 7px rgba(125, 211, 252, 0.55));
     stroke-dasharray: 20 25;
     animation: energyFlow 3.5s linear infinite;
     transition: all 0.4s ease;
@@ -115,23 +117,23 @@
 
 .segmentCore {
     fill: none;
-    stroke: #fff; // Bright white core for electric look
-    stroke-width: 1.5;
+    stroke: rgba(255, 255, 255, 0.9); // Bright white core for electric look
+    stroke-width: 2.8;
     stroke-linecap: round;
-    opacity: 0.9;
-    filter: drop-shadow(0 0 4px #60a5fa);
-    animation: electricFlicker 0.15s infinite alternate;
+    opacity: 0.75;
+    filter: drop-shadow(0 0 3px #7dd3fc);
+    animation: electricFlicker 0.6s infinite ease-in-out alternate;
 }
 
 @keyframes electricFlicker {
     0% {
-        opacity: 0.7;
-        stroke-width: 1.2;
+        opacity: 0.65;
+        stroke-width: 2.3;
     }
 
     100% {
-        opacity: 1;
-        stroke-width: 1.8;
+        opacity: 0.85;
+        stroke-width: 3.1;
     }
 }
 

@@ -85,9 +85,9 @@ export default function Challenges() {
           <svg className={styles.svgLayer} viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} preserveAspectRatio="none" style={{ height: '5000px' }}>
             <defs>
               <linearGradient id="gy-neon-path" x1="0%" y1="0%" x2="100%" y2="0%">
-                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.4" />
-                <stop offset="50%" stopColor="#c084fc" stopOpacity="0.9" />
-                <stop offset="100%" stopColor="#818cf8" stopOpacity="0.4" />
+                <stop offset="0%" stopColor="#38bdf8" stopOpacity="0.55" />
+                <stop offset="50%" stopColor="#7dd3fc" stopOpacity="1" />
+                <stop offset="100%" stopColor="#60a5fa" stopOpacity="0.55" />
               </linearGradient>
               <filter id="gy-electric-blur" x="-100%" y="-100%" width="300%" height="300%">
                 <feGaussianBlur stdDeviation="6" result="blur" />
