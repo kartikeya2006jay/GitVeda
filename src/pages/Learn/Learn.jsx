@@ -1,120 +1,166 @@
+import { useState, useMemo, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
-import { easyLevels, hardLevels, mediumLevels, gameLevels } from "../../data/levels";
+import { gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
+import styles from "./Learn.module.scss";
+import { motion, AnimatePresence } from "framer-motion";
 
-function LevelCard({ level }) {
-  const navigate = useNavigate();
-  const { progress } = useGameContext();
+// Generate a winding path for 32 nodes
+const generateNodes = () => {
+  const nodes = [];
+  const spacing = 150; // Vertical spacing
+  const amplitude = 30; // Horizontal swing percentage
+  const centerX = 50;
 
-  const isCurrent = level.level === progress.level;
-  const isLockedStatus = progress.level < level.level;
+  for (let i = 0; i < 32; i++) {
+    const angle = i * 0.8;
+    const x = centerX + Math.sin(angle) * amplitude;
+    const y = i * spacing + 100;
+    nodes.push({ id: gameLevels[i]?.id, level: gameLevels[i]?.level, title: gameLevels[i]?.title, x, y });
+  }
+  return nodes;
+};
 
-  const difficultyColor =
-    level.difficulty === "Easy" ? "var(--gy-success)" :
-      level.difficulty === "Medium" ? "var(--gy-accent)" :
-        "var(--gy-danger)";
-
-  const cardBorder = isCurrent ? "1px solid #ef4444" : isLockedStatus ? '1px solid var(--gy-glass-border)' : `1px solid ${difficultyColor}`;
-  const cardShadow = isCurrent ? "0 0 20px rgba(239, 68, 68, 0.2)" : "none";
-
-  return (
-    <article
-      className="gy-card"
-      onClick={() => !isLockedStatus && navigate(`/challenge/${level.id}`)}
-      style={{
-        position: 'relative',
-        cursor: isLockedStatus ? 'not-allowed' : 'pointer',
-        opacity: isLockedStatus ? 0.4 : 1,
-        border: cardBorder,
-        boxShadow: cardShadow,
-        background: isLockedStatus ? 'rgba(0,0,0,0.4)' : isCurrent ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.03)',
-        padding: '1.25rem',
-        transition: 'all 0.3s ease'
-      }}
-    >
-      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-        <span style={{ fontSize: '0.7rem', color: isLockedStatus ? 'var(--gy-muted)' : isCurrent ? '#ef4444' : difficultyColor, fontWeight: 800 }}>
-          {isCurrent ? "ACTIVE MISSION" : `${level.difficulty.toUpperCase()} MISSION`}
-        </span>
-        <span style={{ fontSize: '0.7rem', color: 'var(--gy-muted)' }}>Lvl {level.level}</span>
-      </div>
-
-      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: 'var(--gy-font-mono)' }}>{level.title}</h3>
-      <p style={{ fontSize: '0.8rem', color: 'var(--gy-muted)', lineHeight: 1.4 }}>{level.mission}</p>
-
-      {isLockedStatus && (
-        <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.1)', backdropFilter: 'blur(1px)' }}>
-          <span style={{ fontSize: '1.5rem' }}>🔒</span>
-        </div>
-      )}
-
-      {(!isLockedStatus || isCurrent) && (
-        <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: isCurrent ? '#ef4444' : 'var(--gy-primary)' }}>+ {level.xpReward} XP</span>
-          <span style={{ fontSize: '0.7rem', opacity: 0.7, color: isCurrent ? '#ef4444' : 'inherit' }}>{isCurrent ? 'INITIALIZE →' : 'READY →'}</span>
-        </div>
-      )}
-    </article>
-  );
-}
+const NODES_DATA = generateNodes();
 
 export default function Challenges() {
+  const navigate = useNavigate();
   const { progress } = useGameContext();
+  const [selectedLevelId, setSelectedLevelId] = useState(progress.level);
+  const viewportRef = useRef(null);
+
+  const selectedMission = useMemo(() =>
+    gameLevels.find(l => l.id === selectedLevelId) || gameLevels[0]
+    , [selectedLevelId]);
+
+  const completionPercent = Math.round(((progress.level - 1) / 30) * 100);
+
+  // Generate SVG path string
+  const pathD = useMemo(() => {
+    return NODES_DATA.map((n, i) => `${i === 0 ? 'M' : 'L'} ${n.x}% ${n.y}`).join(' ');
+  }, []);
 
   return (
-    <main className="gy-grid" style={{ gap: '2rem' }}>
-      <section className="gy-card" style={{
-        background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.15), rgba(15, 23, 42, 0.9))',
-        padding: '2.5rem'
-      }}>
-        <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>OPERATIONAL MAP</p>
-        <h1 style={{ fontSize: '2.5rem', fontWeight: 800 }}>The 30-Mission Git Campaign</h1>
-        <p style={{ maxWidth: '700px', color: 'var(--gy-muted)' }}>
-          Unlock the full spectrum of Git operations. Progress from basic survival to
-          advanced architectural manipulation. Complete levels to earn XP and unlock the next stage.
-        </p>
+    <div className={styles.mapContainer}>
+      {/* MAP VIEWPORT */}
+      <section className={styles.mapViewport} ref={viewportRef}>
+        <div className={styles.nodesLayer}>
+          {/* SVG Connection Path */}
+          <svg className={styles.svgLayer} style={{ height: '5000px' }}>
+            <path d={pathD} className={styles.glowPath} />
+            <motion.path
+              d={pathD}
+              className={styles.activePath}
+              initial={{ pathLength: 0 }}
+              animate={{ pathLength: progress.level / 32 }}
+              transition={{ duration: 2, ease: "easeInOut" }}
+            />
+          </svg>
 
-        <div className="gy-pill-row" style={{ marginTop: '1.5rem' }}>
-          <span className="gy-pill" style={{ borderColor: 'var(--gy-success)', color: 'var(--gy-success)' }}>1-10: Bootcamp</span>
-          <span className="gy-pill" style={{ borderColor: 'var(--gy-accent)', color: 'var(--gy-accent)' }}>11-20: Advanced Workflows</span>
-          <span className="gy-pill" style={{ borderColor: 'var(--gy-danger)', color: 'var(--gy-danger)' }}>21-30: Shadow Protocols</span>
+          {/* Mission Nodes */}
+          {NODES_DATA.map((node, idx) => {
+            const isLocked = progress.level < node.level;
+            const isCurrent = node.level === progress.level;
+            const isCompleted = progress.level > node.level;
+            const isSelected = selectedLevelId === node.id;
+
+            let statusClass = styles.locked;
+            if (isCurrent) statusClass = styles.active;
+            if (isCompleted) statusClass = styles.completed;
+
+            return (
+              <motion.div
+                key={node.id}
+                className={`${styles.node} ${statusClass} ${isSelected ? styles.selected : ''}`}
+                style={{ left: `${node.x}%`, top: `${node.y}px` }}
+                initial={{ scale: 0, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                transition={{ delay: idx * 0.03 }}
+                onClick={() => {
+                  if (!isLocked) {
+                    setSelectedLevelId(node.id);
+                  }
+                }}
+              >
+                <div className={styles.nodeInside}>
+                  {isCompleted ? "✓" : isLocked ? "🔒" : node.level}
+                </div>
+                <div className={styles.nodeLabel}>
+                  {node.title}
+                </div>
+              </motion.div>
+            );
+          })}
         </div>
       </section>
 
-      <section style={{ display: 'flex', flexDirection: 'column', gap: '3rem' }}>
-        <div>
-          <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ color: 'var(--gy-success)' }}>Stage 01:</span> Core Foundations
-          </h2>
-          <div className="gy-grid gy-grid-3">
-            {easyLevels.map(level => (
-              <LevelCard key={level.id} level={level} />
-            ))}
+      {/* MISSION INTEL SIDEBAR */}
+      <aside className={styles.sidebar}>
+        <div className={styles.sidebarHeader}>
+          <p className="gy-kicker" style={{ color: 'var(--gy-primary)', marginBottom: '0.5rem' }}>MISSION INTEL</p>
+          <h2 style={{ fontSize: '2rem', fontWeight: 900 }}>Neural Strategy</h2>
+        </div>
+
+        <div className={styles.sidebarContent}>
+          <AnimatePresence mode="wait">
+            <motion.div
+              key={selectedMission.id}
+              initial={{ x: 20, opacity: 0 }}
+              animate={{ x: 0, opacity: 1 }}
+              exit={{ x: -20, opacity: 0 }}
+              className={styles.missionDetailCard}
+            >
+              <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+                <span className="gy-pill" style={{ fontSize: '0.6rem' }}>{selectedMission.difficulty.toUpperCase()}</span>
+                <span style={{ color: 'var(--gy-primary)', fontSize: '0.8rem', fontWeight: 800 }}>Lvl {selectedMission.level}</span>
+              </div>
+
+              <h3 style={{ fontSize: '1.6rem', fontWeight: 900, marginTop: '1rem', marginBottom: '0.5rem' }}>{selectedMission.title}</h3>
+              <p style={{ color: 'var(--gy-muted)', fontSize: '0.9rem', lineHeight: 1.6 }}>{selectedMission.mission}</p>
+
+              <div className={styles.intelGrid}>
+                <div className={styles.intelItem}>
+                  <span>Reward</span>
+                  <strong>+{selectedMission.xpReward} XP</strong>
+                </div>
+                <div className={styles.intelItem}>
+                  <span>Status</span>
+                  <strong style={{ color: progress.level > selectedMission.id ? 'var(--gy-success)' : progress.level === selectedMission.id ? '#6366f1' : 'rgba(255,255,255,0.2)' }}>
+                    {progress.level > selectedMission.id ? 'VERIFIED' : progress.level === selectedMission.id ? 'ACTIVE' : 'LOCKED'}
+                  </strong>
+                </div>
+              </div>
+
+              <button
+                className="gy-btn"
+                style={{ width: '100%', marginTop: '2rem' }}
+                onClick={() => navigate(`/challenge/${selectedMission.id}`)}
+              >
+                INITIALIZE PROTOCOL →
+              </button>
+            </motion.div>
+          </AnimatePresence>
+
+          <div className={styles.activityLog}>
+            <p className="gy-kicker" style={{ color: 'var(--gy-primary)', marginBottom: '1rem' }}>SYSTEM ACTIVITY</p>
+            <div style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+              <div style={{ padding: '0.75rem', background: 'rgba(255,255,255,0.02)', borderRadius: '10px', fontSize: '0.75rem', border: '1px solid rgba(255,255,255,0.05)', color: 'var(--gy-muted)' }}>
+                <span style={{ color: 'var(--gy-success)' }}>●</span> Neural pathway {progress.level} mapped successfully.
+              </div>
+            </div>
           </div>
         </div>
 
-        <div>
-          <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ color: 'var(--gy-accent)' }}>Stage 02:</span> Battlefield Collaboration
-          </h2>
-          <div className="gy-grid gy-grid-3">
-            {mediumLevels.map(level => (
-              <LevelCard key={level.id} level={level} />
-            ))}
+        <div className={styles.progressStats}>
+          <div style={{ display: 'flex', justifyContent: 'space-between', marginBottom: '0.5rem' }}>
+            <span style={{ fontSize: '0.7rem', fontWeight: 800, color: 'var(--gy-muted)' }}>CAMPAIGN PROGRESS</span>
+            <span style={{ fontSize: '0.7rem', fontWeight: 900 }}>{completionPercent}%</span>
+          </div>
+          <div className={styles.progressBar}>
+            <div className={styles.fill} style={{ width: `${completionPercent}%` }} />
           </div>
         </div>
-
-        <div>
-          <h2 style={{ marginBottom: '1.5rem', display: 'flex', alignItems: 'center', gap: '1rem' }}>
-            <span style={{ color: 'var(--gy-danger)' }}>Stage 03:</span> Advanced Recovery
-          </h2>
-          <div className="gy-grid gy-grid-3">
-            {hardLevels.map(level => (
-              <LevelCard key={level.id} level={level} />
-            ))}
-          </div>
-        </div>
-      </section>
-    </main>
+      </aside>
+    </div>
   );
 }

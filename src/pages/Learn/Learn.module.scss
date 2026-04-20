@@ -1,0 +1,274 @@
+.mapContainer {
+    position: relative;
+    width: 100%;
+    height: calc(100vh - 120px);
+    min-height: 800px;
+    background: #020617;
+    overflow: hidden;
+    display: flex;
+}
+
+.mapViewport {
+    position: relative;
+    flex: 1;
+    height: 100%;
+    overflow-y: auto;
+    overflow-x: hidden;
+    background: #020617;
+    padding: 100px 0;
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: 0;
+        background:
+            radial-gradient(circle at 50% 50%, rgba(99, 102, 241, 0.08), transparent 70%),
+            linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px),
+            linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px);
+        background-size: 100% 100%, 80px 80px, 80px 80px;
+        animation: gridPulse 8s ease-in-out infinite;
+        pointer-events: none;
+    }
+
+    &::-webkit-scrollbar {
+        width: 6px;
+    }
+
+    &::-webkit-scrollbar-thumb {
+        background: rgba(255, 255, 255, 0.05);
+        border-radius: 10px;
+    }
+}
+
+@keyframes gridPulse {
+
+    0%,
+    100% {
+        opacity: 0.5;
+        transform: scale(1);
+    }
+
+    50% {
+        opacity: 1;
+        transform: scale(1.05);
+    }
+}
+
+.svgLayer {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    pointer-events: none;
+    z-index: 1;
+}
+
+.glowPath {
+    fill: none;
+    stroke: var(--gy-primary);
+    stroke-width: 4;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 8px var(--gy-primary));
+    opacity: 0.3;
+}
+
+.activePath {
+    fill: none;
+    stroke: var(--gy-primary);
+    stroke-width: 6;
+    stroke-linecap: round;
+    filter: drop-shadow(0 0 15px var(--gy-primary));
+    stroke-dasharray: 20;
+    animation: pathFlow 10s linear infinite;
+}
+
+@keyframes pathFlow {
+    from {
+        stroke-dashoffset: 1000;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
+}
+
+.nodesLayer {
+    position: relative;
+    width: 100%;
+    height: 2500px; // Long scrollable area for 32 nodes
+    z-index: 2;
+}
+
+.node {
+    position: absolute;
+    transform: translate(-50%, -50%);
+    width: 60px;
+    height: 60px;
+    cursor: pointer;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+
+    &::before {
+        content: '';
+        position: absolute;
+        inset: -5px;
+        border-radius: 50%;
+        background: var(--gy-primary);
+        opacity: 0;
+        filter: blur(10px);
+        transition: opacity 0.3s ease;
+    }
+
+    &:hover {
+        transform: translate(-50%, -50%) scale(1.2);
+
+        &::before {
+            opacity: 0.4;
+        }
+    }
+}
+
+.nodeInside {
+    width: 100%;
+    height: 100%;
+    border-radius: 16px; // Squircle/Modern look
+    background: rgba(15, 23, 42, 0.9);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    font-family: var(--gy-font-mono);
+    font-weight: 800;
+    color: var(--gy-muted);
+    box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
+    z-index: 1;
+}
+
+.active {
+    .nodeInside {
+        border-color: var(--gy-primary);
+        color: #fff;
+        box-shadow: 0 0 20px rgba(99, 102, 241, 0.6);
+        animation: pulseGlow 2s infinite;
+    }
+}
+
+.completed {
+    .nodeInside {
+        border-color: var(--gy-success);
+        background: rgba(16, 185, 129, 0.1);
+        color: var(--gy-success);
+    }
+}
+
+.locked {
+    opacity: 0.5;
+    cursor: not-allowed;
+    filter: grayscale(1);
+}
+
+@keyframes pulseGlow {
+    0% {
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+
+    50% {
+        box-shadow: 0 0 25px rgba(99, 102, 241, 0.8);
+    }
+
+    100% {
+        box-shadow: 0 0 10px rgba(99, 102, 241, 0.4);
+    }
+}
+
+.sidebar {
+    width: 420px;
+    height: 100%;
+    background: rgba(15, 23, 42, 0.6);
+    backdrop-filter: blur(30px);
+    border-left: 1px solid rgba(255, 255, 255, 0.05);
+    padding: 3rem 2rem;
+    display: flex;
+    flex-direction: column;
+    z-index: 10;
+}
+
+.nodeLabel {
+    position: absolute;
+    top: 50%;
+    left: 140%; // Position to the right of the node
+    transform: translateY(-50%);
+    font-size: 0.85rem;
+    font-weight: 700;
+    white-space: nowrap;
+    pointer-events: none;
+    font-family: var(--gy-font-mono);
+
+    // Golden Effect
+    background: linear-gradient(135deg, #f6d365 0%, #fda085 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 0 5px rgba(253, 160, 133, 0.4));
+    letter-spacing: 0.05em;
+    opacity: 0.9;
+    text-transform: uppercase;
+}
+
+.missionDetailCard {
+    background: rgba(255, 255, 255, 0.03);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 24px;
+    padding: 2rem;
+    margin-top: 2rem;
+}
+
+.intelGrid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 1rem;
+    margin-top: 1.5rem;
+}
+
+.intelItem {
+    display: flex;
+    flex-direction: column;
+    gap: 0.3rem;
+
+    span {
+        font-size: 0.65rem;
+        color: var(--gy-muted);
+        letter-spacing: 0.1em;
+    }
+
+    strong {
+        font-size: 0.9rem;
+        color: #fff;
+    }
+}
+
+.progressStats {
+    margin-top: auto;
+    padding-top: 2rem;
+    border-top: 1px solid rgba(255, 255, 255, 0.05);
+}
+
+.progressBar {
+    height: 6px;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 999px;
+    overflow: hidden;
+    margin-top: 0.5rem;
+}
+
+.fill {
+    height: 100%;
+    background: linear-gradient(to right, var(--gy-primary), var(--gy-secondary));
+    box-shadow: 0 0 10px var(--gy-primary);
+}
+
+.activityLog {
+    margin-top: 3rem;
+}
