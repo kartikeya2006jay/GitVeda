@@ -1,28 +1,35 @@
 import { useState, useEffect } from "react";
+import { useParams } from "react-router-dom";
 import Terminal from "../../components/game/Terminal/Terminal";
 import { gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
 
 export default function Challenge() {
+  const { id } = useParams();
   const { progress, progressDispatch } = useGameContext();
   const [answer, setAnswer] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+  // High-level mission data based on URL ID
+  const levelId = parseInt(id) || 1;
+  const currentLevel = gameLevels.find(l => l.id === levelId) || gameLevels[0];
+
   // Track attempts for the current mission
-  const [attempts, setAttempts] = useState(0);
-  const [breakthroughAttempt, setBreakthroughAttempt] = useState(null);
+  // Seed with previous session stats if available
+  const historicalStats = progress.missionPerformance?.[levelId] || { trials: 0, breakthrough: null };
+  const [attempts, setAttempts] = useState(historicalStats.trials);
+  const [breakthroughAttempt, setBreakthroughAttempt] = useState(historicalStats.breakthrough);
 
-  const currentLevel = gameLevels[Math.max(progress.level - 1, 0)] || gameLevels[0];
-
-  // Reset performance metrics when current level changes
+  // Sync state if mission ID changes via navigation
   useEffect(() => {
-    setAttempts(0);
-    setBreakthroughAttempt(null);
+    const stats = progress.missionPerformance?.[levelId] || { trials: 0, breakthrough: null };
+    setAttempts(stats.trials);
+    setBreakthroughAttempt(stats.breakthrough);
     setIsSuccess(false);
     setShowHint(false);
     setAnswer("");
-  }, [currentLevel.id]);
+  }, [levelId, progress.missionPerformance]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -30,21 +37,35 @@ export default function Challenge() {
     setAttempts(currentAttemptNumber);
 
     if (answer.trim().toLowerCase() === currentLevel.answer.toLowerCase()) {
-      setBreakthroughAttempt(currentAttemptNumber);
+      if (!breakthroughAttempt) {
+        setBreakthroughAttempt(currentAttemptNumber);
+      }
       setIsSuccess(true);
-      // We don't dispatch level completion until the user clicks "Continue" 
-      // to keep the success modal pinned to the current level info.
     } else {
       alert("INCORRECT PROTOCOL. PLEASE RE-EVALUATE.");
     }
   };
 
   const handleContinue = () => {
+    // Save performance to global state
     progressDispatch({
-      type: "COMPLETE_LEVEL",
-      payload: { level: currentLevel.level, xp: currentLevel.xpReward }
+      type: "SAVE_MISSION_STATS",
+      payload: {
+        levelId: currentLevel.id,
+        trials: attempts,
+        breakthrough: breakthroughAttempt
+      }
     });
-    progressDispatch({ type: "UPDATE_STREAK" });
+
+    // Award XP/Level only if this was the latest unlocked level
+    if (currentLevel.level === progress.level) {
+      progressDispatch({
+        type: "COMPLETE_LEVEL",
+        payload: { level: currentLevel.level, xp: currentLevel.xpReward }
+      });
+      progressDispatch({ type: "UPDATE_STREAK" });
+    }
+
     setIsSuccess(false);
   };
 

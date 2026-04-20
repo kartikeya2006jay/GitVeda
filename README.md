@@ -46,36 +46,36 @@ graph TD
 
 ---
 
-## 🛠️ Tech Matrix
+## 🛠️ Technical Matrix
 
-- **CORE**: `React 18` | `Vite` | `Neural SCSS`
-- **STATE**: `Context API` | `useReducer`
-- **NEXUS**: `Firebase Auth` | `Firestore`
-- **RENDER**: `Three.js` (Showcase) | `SVG/Canvas` (Visualizer)
+<div align="center">
+
+| Layer | Neural Tech Stack |
+| :--- | :--- |
+| **Interface** | `React 18` | `Vite` | `Neural SCSS` |
+| **State** | `Context API` | `useReducer` |
+| **Persistence** | `Firebase Auth` | `Firestore` |
+| **Visualization** | `Three.js` | `SVG/Canvas` |
+
+</div>
 
 ---
 
 ## 🚀 Accessing the Nexus
 
 ### 1. Initialize Neural Interface
-Clone the repository and enter the local core.
-
 ```bash
 git clone https://github.com/kartikeya2006jay/GitVeda.git
 cd GitVeda
 ```
 
 ### 2. Configure Subsystems
-Duplicate the environment template and inject your Firebase credentials.
-
 ```bash
 cp .env.example .env
 # Edit .env with your Neural Synchronization Keys
 ```
 
 ### 3. Deploy Local Node
-Initialize dependencies and launch the dev environment.
-
 ```bash
 npm install
 npm run dev
@@ -84,6 +84,5 @@ npm run dev
 ---
 
 <div align="center">
-  <p><sub>Built with 💙 by <b>Antigravity</b> for the next generation of architects.</sub></p>
-  <p><b>Neural Core v1.0.4</b></p>
+  <p><sub>Built with 💙 by <b>Kartikeya Yadav</b> for the next generation of architects.</sub></p>
 </div>

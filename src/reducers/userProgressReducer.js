@@ -3,6 +3,7 @@ export const initialUserProgress = {
   xp: 0,
   streakDays: 0,
   achievements: [],
+  missionPerformance: {}, // { [levelId]: { trials: N, breakthrough: M } }
 };
 
 export function userProgressReducer(state, action) {
@@ -18,6 +19,17 @@ export function userProgressReducer(state, action) {
       };
     case "UPDATE_STREAK":
       return { ...state, streakDays: state.streakDays + 1 };
+    case "SAVE_MISSION_STATS":
+      return {
+        ...state,
+        missionPerformance: {
+          ...state.missionPerformance,
+          [action.payload.levelId]: {
+            trials: action.payload.trials,
+            breakthrough: action.payload.breakthrough
+          }
+        }
+      };
     case "SET_PROFILE":
       return { ...state, ...action.payload };
     default:
