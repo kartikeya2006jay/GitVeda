@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { useGameContext } from "../../context";
+import { gameLevels } from "../../data/levels";
 
 export default function Dashboard() {
   const { progress } = useGameContext();
@@ -60,18 +61,33 @@ export default function Dashboard() {
       <section className="gy-card">
         <h3 style={{ marginBottom: '2rem' }}>Protocol History</h3>
         <div style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
-          {[1, 2, 3].map(i => (
-            <div key={i} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid transparent', hover: { borderColor: 'var(--gy-glass-border)' } }}>
-              <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
-                <span style={{ padding: '0.5rem 0.75rem', background: 'rgba(99, 102, 241, 0.1)', color: 'var(--gy-primary)', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>SUCCESS</span>
-                <div>
-                  <p style={{ fontWeight: 800, margin: 0 }}>MISSION 0{i} VALIDATED</p>
-                  <p className="gy-muted" style={{ fontSize: '0.8rem', margin: 0 }}>Neural synchronization complete. Records updated.</p>
-                </div>
-              </div>
-              <span style={{ fontSize: '0.8rem', color: 'var(--gy-muted)' }}>{i} DAYS AGO</span>
+          {Object.entries(progress.missionPerformance || {}).length > 0 ? (
+            Object.entries(progress.missionPerformance)
+              .sort(([idA], [idB]) => parseInt(idB) - parseInt(idA)) // Most recent first
+              .map(([levelId, stats]) => {
+                const mission = gameLevels.find(l => l.id === parseInt(levelId));
+                return (
+                  <div key={levelId} style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '16px', border: '1px solid var(--gy-glass-border)' }}>
+                    <div style={{ display: 'flex', gap: '1.5rem', alignItems: 'center' }}>
+                      <span style={{ padding: '0.5rem 0.75rem', background: 'rgba(16, 185, 129, 0.1)', color: 'var(--gy-success)', borderRadius: '8px', fontSize: '0.75rem', fontWeight: 800 }}>COMPLETED</span>
+                      <div>
+                        <p style={{ fontWeight: 800, margin: 0 }}>MISSION {levelId.padStart(2, '0')} VALIDATED</p>
+                        <p className="gy-muted" style={{ fontSize: '0.8rem', margin: 0 }}>
+                          {mission?.title}: Breakthrough at Attempt #{stats.breakthrough}
+                        </p>
+                      </div>
+                    </div>
+                    <div style={{ textAlign: 'right' }}>
+                      <span style={{ fontSize: '0.8rem', color: 'var(--gy-muted)' }}>Trials: {stats.trials}</span>
+                    </div>
+                  </div>
+                );
+              })
+          ) : (
+            <div style={{ padding: '3rem', textAlign: 'center', background: 'rgba(255,255,255,0.01)', borderRadius: '16px', border: '1px dashed var(--gy-glass-border)' }}>
+              <p className="gy-muted">No historical data available. Deploy to the arena to begin neural mapping.</p>
             </div>
-          ))}
+          )}
         </div>
       </section>
     </main>

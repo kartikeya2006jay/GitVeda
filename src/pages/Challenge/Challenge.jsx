@@ -1,11 +1,12 @@
 import { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Terminal from "../../components/game/Terminal/Terminal";
 import { gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
 
 export default function Challenge() {
   const { id } = useParams();
+  const navigate = useNavigate();
   const { progress, progressDispatch } = useGameContext();
   const [answer, setAnswer] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
@@ -67,6 +68,14 @@ export default function Challenge() {
     }
 
     setIsSuccess(false);
+
+    // Auto-navigate to next mission if it exists
+    const nextLevel = gameLevels.find(l => l.level === (currentLevel.level + 1));
+    if (nextLevel) {
+      navigate(`/challenge/${nextLevel.id}`);
+    } else {
+      navigate('/challenges');
+    }
   };
 
   return (
