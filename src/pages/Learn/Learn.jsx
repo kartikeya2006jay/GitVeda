@@ -2,29 +2,39 @@ import { useNavigate } from "react-router-dom";
 import { easyLevels, hardLevels, mediumLevels, gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
 
-function LevelCard({ level, isLocked }) {
+function LevelCard({ level }) {
   const navigate = useNavigate();
+  const { progress } = useGameContext();
+
+  const isCurrent = level.level === progress.level;
+  const isLockedStatus = progress.level < level.level;
+
   const difficultyColor =
     level.difficulty === "Easy" ? "var(--gy-success)" :
       level.difficulty === "Medium" ? "var(--gy-accent)" :
         "var(--gy-danger)";
 
+  const cardBorder = isCurrent ? "1px solid #ef4444" : isLockedStatus ? '1px solid var(--gy-glass-border)' : `1px solid ${difficultyColor}`;
+  const cardShadow = isCurrent ? "0 0 20px rgba(239, 68, 68, 0.2)" : "none";
+
   return (
     <article
       className="gy-card"
-      onClick={() => !isLocked && navigate(`/challenge/${level.id}`)}
+      onClick={() => !isLockedStatus && navigate(`/challenge/${level.id}`)}
       style={{
         position: 'relative',
-        cursor: isLocked ? 'not-allowed' : 'pointer',
-        opacity: isLocked ? 0.4 : 1,
-        border: isLocked ? '1px solid var(--gy-glass-border)' : `1px solid ${difficultyColor}`,
-        background: isLocked ? 'rgba(0,0,0,0.4)' : 'rgba(255,255,255,0.03)',
-        padding: '1.25rem'
+        cursor: isLockedStatus ? 'not-allowed' : 'pointer',
+        opacity: isLockedStatus ? 0.4 : 1,
+        border: cardBorder,
+        boxShadow: cardShadow,
+        background: isLockedStatus ? 'rgba(0,0,0,0.4)' : isCurrent ? 'rgba(239, 68, 68, 0.05)' : 'rgba(255,255,255,0.03)',
+        padding: '1.25rem',
+        transition: 'all 0.3s ease'
       }}
     >
       <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '0.75rem' }}>
-        <span style={{ fontSize: '0.7rem', color: isLocked ? 'var(--gy-muted)' : difficultyColor, fontWeight: 800 }}>
-          {level.difficulty.toUpperCase()} MISSION
+        <span style={{ fontSize: '0.7rem', color: isLockedStatus ? 'var(--gy-muted)' : isCurrent ? '#ef4444' : difficultyColor, fontWeight: 800 }}>
+          {isCurrent ? "ACTIVE MISSION" : `${level.difficulty.toUpperCase()} MISSION`}
         </span>
         <span style={{ fontSize: '0.7rem', color: 'var(--gy-muted)' }}>Lvl {level.level}</span>
       </div>
@@ -32,16 +42,16 @@ function LevelCard({ level, isLocked }) {
       <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: 'var(--gy-font-mono)' }}>{level.title}</h3>
       <p style={{ fontSize: '0.8rem', color: 'var(--gy-muted)', lineHeight: 1.4 }}>{level.mission}</p>
 
-      {isLocked && (
+      {isLockedStatus && (
         <div style={{ position: 'absolute', inset: 0, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.1)', backdropFilter: 'blur(1px)' }}>
           <span style={{ fontSize: '1.5rem' }}>🔒</span>
         </div>
       )}
 
-      {!isLocked && (
+      {(!isLockedStatus || isCurrent) && (
         <div style={{ marginTop: '1rem', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: 'var(--gy-primary)' }}>+ {level.xpReward} XP</span>
-          <span style={{ fontSize: '0.7rem', opacity: 0.7 }}>READY →</span>
+          <span style={{ fontSize: '0.7rem', fontWeight: 700, color: isCurrent ? '#ef4444' : 'var(--gy-primary)' }}>+ {level.xpReward} XP</span>
+          <span style={{ fontSize: '0.7rem', opacity: 0.7, color: isCurrent ? '#ef4444' : 'inherit' }}>{isCurrent ? 'INITIALIZE →' : 'READY →'}</span>
         </div>
       )}
     </article>
@@ -78,7 +88,7 @@ export default function Challenges() {
           </h2>
           <div className="gy-grid gy-grid-3">
             {easyLevels.map(level => (
-              <LevelCard key={level.id} level={level} isLocked={progress.level < level.level} />
+              <LevelCard key={level.id} level={level} />
             ))}
           </div>
         </div>
@@ -89,7 +99,7 @@ export default function Challenges() {
           </h2>
           <div className="gy-grid gy-grid-3">
             {mediumLevels.map(level => (
-              <LevelCard key={level.id} level={level} isLocked={progress.level < level.level} />
+              <LevelCard key={level.id} level={level} />
             ))}
           </div>
         </div>
@@ -100,7 +110,7 @@ export default function Challenges() {
           </h2>
           <div className="gy-grid gy-grid-3">
             {hardLevels.map(level => (
-              <LevelCard key={level.id} level={level} isLocked={progress.level < level.level} />
+              <LevelCard key={level.id} level={level} />
             ))}
           </div>
         </div>

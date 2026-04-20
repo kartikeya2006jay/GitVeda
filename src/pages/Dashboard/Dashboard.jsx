@@ -35,8 +35,8 @@ export default function Dashboard() {
                 <p style={{ fontSize: '1.8rem', fontWeight: 900 }}>{progress.xp.toLocaleString()}</p>
               </div>
               <div style={{ padding: '1.25rem', background: 'rgba(255,255,255,0.02)', borderRadius: '20px', border: '1px solid var(--gy-glass-border)' }}>
-                <p className="gy-kicker" style={{ color: 'var(--gy-success)' }}>CURRENT STREAK</p>
-                <p style={{ fontSize: '1.8rem', fontWeight: 900 }}>{progress.streakDays} DAYS 🔥</p>
+                <p className="gy-kicker" style={{ color: 'var(--gy-success)' }}>MISSIONS COMPLETED</p>
+                <p style={{ fontSize: '1.8rem', fontWeight: 900 }}>{Object.keys(progress.missionPerformance || {}).length} MISSIONS ✅</p>
               </div>
             </div>
           </div>
