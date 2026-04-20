@@ -81,6 +81,13 @@ npm install
 npm run dev
 ```
 
+### 4. Enable AI Hint Engine (English + Hindi)
+`Mission Control -> Need Intel? (Ask AI Hint)` now calls `/api/ai-hint`.
+
+- Set server env: `OPENAI_API_KEY=your_secret_key`
+- Optional model override: `OPENAI_MODEL=gpt-4.1-mini`
+- Frontend endpoint override (optional): `VITE_AI_HINT_API_URL=/api/ai-hint`
+
 ---
 
 <div align="center">

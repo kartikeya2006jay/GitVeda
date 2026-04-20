@@ -3,6 +3,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import Terminal from "../../components/game/Terminal/Terminal";
 import { gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
+import { getMissionHint } from "../../services/api/aiHints";
 
 export default function Challenge() {
   const { id } = useParams();
@@ -11,6 +12,10 @@ export default function Challenge() {
   const [answer, setAnswer] = useState("");
   const [isSuccess, setIsSuccess] = useState(false);
   const [showHint, setShowHint] = useState(false);
+  const [aiHint, setAiHint] = useState(null);
+  const [isHintLoading, setIsHintLoading] = useState(false);
+  const [hintError, setHintError] = useState("");
+  const [showExplanation, setShowExplanation] = useState(false);
 
   // High-level mission data based on URL ID
   const levelId = parseInt(id) || 1;
@@ -29,8 +34,54 @@ export default function Challenge() {
     setBreakthroughAttempt(stats.breakthrough);
     setIsSuccess(false);
     setShowHint(false);
+    setAiHint(null);
+    setHintError("");
+    setIsHintLoading(false);
+    setShowExplanation(false);
+    if (typeof window !== "undefined" && window.speechSynthesis) {
+      window.speechSynthesis.cancel();
+    }
     setAnswer("");
   }, [levelId, progress.missionPerformance]);
+
+  const handleHintRequest = async () => {
+    if (isHintLoading) return;
+
+    setShowHint(true);
+    setHintError("");
+    setIsHintLoading(true);
+
+    try {
+      const result = await getMissionHint({
+        mission: currentLevel.mission,
+        question: currentLevel.question,
+        answer: currentLevel.answer,
+        command: currentLevel.command,
+      });
+      setAiHint(result);
+      setShowExplanation(false);
+    } catch (error) {
+      setAiHint(null);
+      setHintError(
+        "AI hint is currently unavailable. Please connect an OpenAI backend endpoint and try again."
+      );
+    } finally {
+      setIsHintLoading(false);
+    }
+  };
+
+  const handleSpeakExplanation = () => {
+    if (!aiHint?.explanation) return;
+
+    setShowExplanation(true);
+
+    if (typeof window === "undefined" || !window.speechSynthesis) return;
+    window.speechSynthesis.cancel();
+    const utterance = new SpeechSynthesisUtterance(aiHint.explanation);
+    utterance.lang = "en-US";
+    utterance.rate = 0.95;
+    window.speechSynthesis.speak(utterance);
+  };
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -169,16 +220,51 @@ export default function Challenge() {
             <div style={{ marginTop: '1.5rem', paddingTop: '1.5rem', borderTop: '1px solid rgba(255,255,255,0.05)' }}>
               {!showHint ? (
                 <button
-                  onClick={() => setShowHint(true)}
+                  onClick={handleHintRequest}
                   style={{ background: 'none', border: 'none', color: 'var(--gy-muted)', fontSize: '0.8rem', cursor: 'pointer', display: 'flex', alignItems: 'center', gap: '0.5rem' }}
                 >
-                  <span>💡</span> Need Intel? (Show Hint)
+                  <span>💡</span> Need Intel? (Ask AI Hint)
                 </button>
               ) : (
                 <div style={{ background: 'rgba(245, 158, 11, 0.05)', padding: '0.75rem', borderRadius: '8px', border: '1px solid rgba(245, 158, 11, 0.2)' }}>
-                  <p style={{ fontSize: '0.8rem', color: 'var(--gy-accent)', margin: 0 }}>
-                    <strong>HINT:</strong> Use the command that starts with <code>"{currentLevel.answer.split(' ')[0]}"</code> and follows the objective carefully.
-                  </p>
+                  {isHintLoading && (
+                    <p style={{ fontSize: '0.8rem', color: 'var(--gy-accent)', margin: 0 }}>
+                      Generating AI hint...
+                    </p>
+                  )}
+
+                  {hintError && (
+                    <p style={{ fontSize: '0.8rem', color: '#fca5a5', margin: 0 }}>{hintError}</p>
+                  )}
+
+                  {!isHintLoading && !hintError && aiHint && (
+                    <div style={{ display: 'grid', gap: '0.75rem' }}>
+                      <p style={{ fontSize: '0.8rem', color: 'var(--gy-accent)', margin: 0 }}>
+                        <strong>Hint:</strong> {aiHint.hint}
+                      </p>
+                      <button
+                        onClick={handleSpeakExplanation}
+                        type="button"
+                        style={{
+                          justifySelf: 'start',
+                          background: 'rgba(255,255,255,0.06)',
+                          border: '1px solid rgba(255,255,255,0.1)',
+                          color: '#e2e8f0',
+                          borderRadius: '8px',
+                          padding: '0.35rem 0.65rem',
+                          cursor: 'pointer',
+                          fontSize: '0.75rem'
+                        }}
+                      >
+                        🔊 Explain
+                      </button>
+                      {showExplanation && (
+                        <p style={{ fontSize: '0.8rem', color: '#fde68a', margin: 0 }}>
+                          <strong>Explanation:</strong> {aiHint.explanation}
+                        </p>
+                      )}
+                    </div>
+                  )}
                 </div>
               )}
             </div>
