@@ -1,6 +1,5 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import Terminal from "../../components/game/Terminal/Terminal";
-import RepositoryVisualizer from "../../components/game/RepositoryVisualizer/RepositoryVisualizer";
 import { gameLevels } from "../../data/levels";
 import { useGameContext } from "../../context";
 
@@ -10,22 +9,43 @@ export default function Challenge() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [showHint, setShowHint] = useState(false);
 
+  // Track attempts for the current mission
+  const [attempts, setAttempts] = useState(0);
+  const [breakthroughAttempt, setBreakthroughAttempt] = useState(null);
+
   const currentLevel = gameLevels[Math.max(progress.level - 1, 0)] || gameLevels[0];
+
+  // Reset performance metrics when current level changes
+  useEffect(() => {
+    setAttempts(0);
+    setBreakthroughAttempt(null);
+    setIsSuccess(false);
+    setShowHint(false);
+    setAnswer("");
+  }, [currentLevel.id]);
 
   const handleSubmit = (e) => {
     e.preventDefault();
+    const currentAttemptNumber = attempts + 1;
+    setAttempts(currentAttemptNumber);
+
     if (answer.trim().toLowerCase() === currentLevel.answer.toLowerCase()) {
+      setBreakthroughAttempt(currentAttemptNumber);
       setIsSuccess(true);
-      progressDispatch({
-        type: "COMPLETE_LEVEL",
-        payload: { level: currentLevel.level, xp: currentLevel.xpReward }
-      });
-      progressDispatch({ type: "UPDATE_STREAK" });
-      setAnswer("");
-      setShowHint(false);
+      // We don't dispatch level completion until the user clicks "Continue" 
+      // to keep the success modal pinned to the current level info.
     } else {
       alert("INCORRECT PROTOCOL. PLEASE RE-EVALUATE.");
     }
+  };
+
+  const handleContinue = () => {
+    progressDispatch({
+      type: "COMPLETE_LEVEL",
+      payload: { level: currentLevel.level, xp: currentLevel.xpReward }
+    });
+    progressDispatch({ type: "UPDATE_STREAK" });
+    setIsSuccess(false);
   };
 
   return (
@@ -40,8 +60,11 @@ export default function Challenge() {
             <p className="gy-kicker" style={{ color: 'var(--gy-success)' }}>MISSION SUCCESSFUL</p>
             <h2 style={{ fontSize: '3rem', fontWeight: 900 }}>PROTOCOL VALIDATED</h2>
             <p style={{ fontSize: '1.2rem', color: 'var(--gy-muted)' }}>Command Mastered: <code style={{ color: '#fff', background: 'rgba(255,255,255,0.1)', padding: '0.2rem 0.5rem', borderRadius: '4px' }}>{currentLevel.command}</code></p>
-            <p style={{ fontSize: '1.2rem', marginBottom: '2rem' }}>Reward: +{currentLevel.xpReward} XP | Streak Updated 🔥</p>
-            <button className="gy-btn" onClick={() => setIsSuccess(false)}>CONTINUE TO NEXT MISSION</button>
+            <p style={{ fontSize: '1.2rem', marginBottom: '1rem' }}>Reward: +{currentLevel.xpReward} XP | Streak Updated 🔥</p>
+            <div style={{ marginBottom: '2rem', padding: '1rem', background: 'rgba(16, 185, 129, 0.1)', borderRadius: '8px', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
+              <p style={{ fontSize: '0.9rem', margin: 0, color: 'var(--gy-success)' }}>Breakthrough achieved on <strong>Attempt #{breakthroughAttempt}</strong></p>
+            </div>
+            <button className="gy-btn" onClick={handleContinue}>CONTINUE TO NEXT MISSION</button>
           </div>
         </div>
       )}
@@ -131,10 +154,35 @@ export default function Challenge() {
             </div>
           </section>
 
-          <section className="gy-card" style={{ padding: '1rem', flex: 1, minHeight: '200px', display: 'flex', flexDirection: 'column' }}>
-            <p className="gy-kicker" style={{ marginBottom: '1rem', opacity: 0.6 }}>REPOSITORY VISUALIZATION</p>
-            <div style={{ flex: 1, background: 'rgba(0,0,0,0.2)', borderRadius: '12px', overflow: 'hidden' }}>
-              <RepositoryVisualizer />
+          {/* MISSION PERFORMANCE INSTEAD OF REPO VISUALIZER */}
+          <section className="gy-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '220px' }}>
+            <p className="gy-kicker" style={{ marginBottom: '0.5rem', color: 'var(--gy-primary)' }}>MISSION PERFORMANCE</p>
+
+            <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--gy-glass-border)', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.65rem', color: 'var(--gy-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Total Trials</p>
+                <p style={{ fontSize: '2rem', fontWeight: 900, margin: 0, color: 'var(--gy-primary)' }}>{attempts}</p>
+              </div>
+              <div style={{ background: 'rgba(255,255,255,0.03)', padding: '1rem', borderRadius: '12px', border: '1px solid var(--gy-glass-border)', textAlign: 'center' }}>
+                <p style={{ fontSize: '0.65rem', color: 'var(--gy-muted)', textTransform: 'uppercase', marginBottom: '0.5rem' }}>Success Point</p>
+                <p style={{ fontSize: '2rem', fontWeight: 900, margin: 0, color: breakthroughAttempt ? 'var(--gy-success)' : 'var(--gy-muted)' }}>
+                  {breakthroughAttempt || '--'}
+                </p>
+              </div>
+            </div>
+
+            <div style={{ flex: 1, display: 'grid', placeItems: 'center', background: 'rgba(0,0,0,0.1)', borderRadius: '12px', border: '1px dashed var(--gy-glass-border)', marginTop: '0.5rem' }}>
+              {!isSuccess ? (
+                <div style={{ textAlign: 'center', opacity: 0.5 }}>
+                  <p style={{ fontSize: '0.8rem', margin: 0 }}>MISSION IN PROGRESS</p>
+                  <p style={{ fontSize: '0.7rem' }}>Deploy protocol to evaluate performance</p>
+                </div>
+              ) : (
+                <div style={{ textAlign: 'center', animation: 'gy-fade-in 0.3s ease' }}>
+                  <p style={{ fontSize: '0.9rem', color: 'var(--gy-success)', fontWeight: 800 }}>ANALYSIS COMPLETE</p>
+                  <p style={{ fontSize: '0.7rem' }}>Breakthrough at attempt {breakthroughAttempt}</p>
+                </div>
+              )}
             </div>
           </section>
         </aside>
