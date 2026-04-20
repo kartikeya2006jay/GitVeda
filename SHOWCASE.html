@@ -4,177 +4,179 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>GitVeda | Neural Architecture Showcase</title>
+    <title>GitVeda | Neural 3D Showcase</title>
     <style>
-        :root {
-            --primary: #6366f1;
-            --secondary: #06b6d4;
-            --bg: #020617;
-            --text: #f8fafc;
-        }
-
         body {
             margin: 0;
-            background: var(--bg);
-            color: var(--text);
-            font-family: 'Inter', system-ui, sans-serif;
+            background: #020617;
             overflow: hidden;
-            display: grid;
-            place-items: center;
-            height: 100vh;
+            font-family: 'Inter', sans-serif;
         }
 
-        .canvas {
-            perspective: 1200px;
+        #canvas-container {
+            position: absolute;
+            top: 0;
+            left: 0;
             width: 100%;
             height: 100%;
-            display: grid;
-            place-items: center;
-            position: relative;
         }
 
-        .scene {
-            width: 300px;
-            height: 300px;
-            position: relative;
-            transform-style: preserve-3d;
-            animation: rotate 20s linear infinite;
-        }
-
-        @keyframes rotate {
-            from {
-                transform: rotateY(0deg);
-            }
-
-            to {
-                transform: rotateY(360deg);
-            }
-        }
-
-        .core {
+        .overlay {
             position: absolute;
-            width: 100px;
-            height: 100px;
-            background: radial-gradient(circle, var(--primary), transparent);
-            border-radius: 50%;
-            left: 100px;
-            top: 100px;
-            box-shadow: 0 0 50px var(--primary);
-            display: grid;
-            place-items: center;
-            font-weight: 900;
-            font-size: 1.2rem;
-            letter-spacing: 0.1em;
-            text-shadow: 0 0 10px white;
-        }
-
-        .module {
-            position: absolute;
-            width: 80px;
-            height: 80px;
-            background: rgba(255, 255, 255, 0.05);
-            backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 255, 255, 0.1);
-            border-radius: 12px;
-            display: grid;
-            place-items: center;
-            font-size: 0.7rem;
-            text-align: center;
-            padding: 5px;
-            box-sizing: border-box;
-            transition: 0.3s;
-        }
-
-        .module:hover {
-            background: rgba(99, 102, 241, 0.2);
-            border-color: var(--primary);
-            transform: scale(1.1);
-        }
-
-        .m1 {
-            transform: rotateY(0deg) translateZ(250px);
-        }
-
-        .m2 {
-            transform: rotateY(60deg) translateZ(250px);
-        }
-
-        .m3 {
-            transform: rotateY(120deg) translateZ(250px);
-        }
-
-        .m4 {
-            transform: rotateY(180deg) translateZ(250px);
-        }
-
-        .m5 {
-            transform: rotateY(240deg) translateZ(250px);
-        }
-
-        .m6 {
-            transform: rotateY(300deg) translateZ(250px);
-        }
-
-        .ui {
-            position: fixed;
-            bottom: 40px;
-            text-align: center;
-            z-index: 100;
-        }
-
-        .btn {
-            background: linear-gradient(135deg, var(--primary), var(--secondary));
-            border: none;
-            color: white;
-            padding: 1rem 2rem;
-            border-radius: 50px;
-            font-weight: 800;
-            cursor: pointer;
-            text-decoration: none;
-            text-transform: uppercase;
-            letter-spacing: 0.2em;
-            box-shadow: 0 10px 30px rgba(99, 102, 241, 0.4);
-        }
-
-        .header {
-            position: fixed;
             top: 40px;
+            left: 50%;
+            transform: translateX(-50%);
             text-align: center;
+            color: white;
+            pointer-events: none;
+            z-index: 10;
         }
 
         h1 {
-            font-size: 3rem;
+            font-size: 3.5rem;
             margin: 0;
-            background: linear-gradient(to right, white, var(--primary));
+            letter-spacing: 0.1em;
+            background: linear-gradient(135deg, #fff, #6366f1);
             -webkit-background-clip: text;
             background-clip: text;
             -webkit-text-fill-color: transparent;
-            letter-spacing: -0.05em;
+            font-weight: 900;
+        }
+
+        .controls {
+            position: fixed;
+            bottom: 40px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 10;
+            display: flex;
+            gap: 20px;
+        }
+
+        .btn {
+            background: rgba(255, 255, 255, 0.1);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.2);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            text-decoration: none;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.1em;
+            transition: 0.3s;
+            cursor: pointer;
+        }
+
+        .btn:hover {
+            background: rgba(99, 102, 241, 0.3);
+            border-color: #6366f1;
         }
     </style>
 </head>
 
 <body>
-    <div class="header">
+    <div class="overlay">
         <h1>NEURAL ARCHITECTURE</h1>
-        <p style="color: grey">SYSTEM OVERVIEW v1.0.4</p>
+        <p style="color: #94a3b8; letter-spacing: 0.4em;">GITVEDA KNOWLEDGE ENGINE v1.0.4</p>
     </div>
 
-    <div class="canvas">
-        <div class="scene">
-            <div class="core">VEDA</div>
-            <div class="module m1">GAME<br>ENGINE</div>
-            <div class="module m2">TERMINAL<br>CORE</div>
-            <div class="module m3">GRAPH<br>VISUALS</div>
-            <div class="module m4">AUTH<br>VAULT</div>
-            <div class="module m5">MISSION<br>CTRL</div>
-            <div class="module m6">NEURAL<br>INTEL</div>
-        </div>
+    <div id="canvas-container"></div>
+
+    <div class="controls">
+        <a href="/" class="btn">Launch Core</a>
+        <a href="https://github.com/kartikeya2006jay/GitVeda" class="btn">Source Code</a>
     </div>
 
-    <div class="ui">
-        <a href="https://github.com/kartikeya2006jay/GitVeda" class="btn">Return to Source</a>
-    </div>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script>
+        const container = document.getElementById('canvas-container');
+        const scene = new THREE.Scene();
+        const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+        const renderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+        renderer.setSize(window.innerWidth, window.innerHeight);
+        container.appendChild(renderer.domElement);
+
+        // Core Crystal
+        const geometry = new THREE.IcosahedronGeometry(2, 0);
+        const material = new THREE.MeshPhongMaterial({
+            color: 0x6366f1,
+            wireframe: true,
+            emissive: 0x6366f1,
+            emissiveIntensity: 0.5,
+            transparent: true,
+            opacity: 0.8
+        });
+        const core = new THREE.Mesh(geometry, material);
+        scene.add(core);
+
+        // Particle System (Neural Network)
+        const particlesGeometry = new THREE.BufferGeometry();
+        const particlesCount = 2000;
+        const posArray = new Float32Array(particlesCount * 3);
+
+        for (let i = 0; i < particlesCount * 3; i++) {
+            posArray[i] = (Math.random() - 0.5) * 15;
+        }
+        particlesGeometry.setAttribute('position', new THREE.BufferAttribute(posArray, 3));
+        const particlesMaterial = new THREE.PointsMaterial({
+            size: 0.02,
+            color: 0x06b6d4,
+            transparent: true,
+            opacity: 0.5
+        });
+        const particles = new THREE.Points(particlesGeometry, particlesMaterial);
+        scene.add(particles);
+
+        // Inner Core Glow
+        const innerGeo = new THREE.IcosahedronGeometry(1.2, 0);
+        const innerMat = new THREE.MeshPhongMaterial({
+            color: 0xffffff,
+            transparent: true,
+            opacity: 0.2
+        });
+        const innerCore = new THREE.Mesh(innerGeo, innerMat);
+        scene.add(innerCore);
+
+        // Lighting
+        const light = new THREE.PointLight(0xffffff, 1, 100);
+        light.position.set(10, 10, 10);
+        scene.add(light);
+        const ambientLight = new THREE.AmbientLight(0x404040);
+        scene.add(ambientLight);
+
+        camera.position.z = 5;
+
+        // Mouse Rotation
+        let mouseX = 0;
+        let mouseY = 0;
+        document.addEventListener('mousemove', (e) => {
+            mouseX = e.clientX / window.innerWidth - 0.5;
+            mouseY = e.clientY / window.innerHeight - 0.5;
+        });
+
+        function animate() {
+            requestAnimationFrame(animate);
+
+            core.rotation.y += 0.005;
+            core.rotation.x += 0.003;
+            innerCore.rotation.y -= 0.005;
+
+            particles.rotation.y += 0.001;
+            particles.rotation.x = mouseY * 0.5;
+            particles.rotation.y = mouseX * 0.5;
+
+            renderer.render(scene, camera);
+        }
+
+        animate();
+
+        window.addEventListener('resize', () => {
+            camera.aspect = window.innerWidth / window.innerHeight;
+            camera.updateProjectionMatrix();
+            renderer.setSize(window.innerWidth, window.innerHeight);
+        });
+    </script>
 </body>
 
 </html>

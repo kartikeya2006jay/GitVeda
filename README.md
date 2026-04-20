@@ -1,5 +1,5 @@
 <p align="center">
-  <img src="file:///home/kartikeyayadav/.gemini/antigravity/brain/dfa6251c-55a6-49da-8820-b75ca19c9c55/gitveda_hero_neural_1776651064666.png" width="100%" alt="GitVeda Hero">
+  <img src="./public/assets/images/hero.png" width="100%" alt="GitVeda Neural Core">
 </p>
 
 <h1 align="center">🌌 GITVEDA 🌌</h1>
@@ -10,41 +10,60 @@
 </p>
 
 <p align="center">
-  <img src="https://img.shields.io/badge/CORE_SYSTEM-ACTIVE-success?style=for-the-badge&logo=appveyor" alt="System Status">
+  <img src="https://img.shields.io/badge/CORE_SYSTEM-ACTIVE-6366f1?style=for-the-badge&logoCharColor=white" alt="System Status">
+  <img src="https://img.shields.io/badge/ARCH-NEURAL-06b6d4?style=for-the-badge" alt="Architecture">
 </p>
 
 <p align="center">
-  <a href="file:///home/kartikeyayadav/Desktop/GitVeda/SHOWCASE.html">
+  <a href="./SHOWCASE.html">
     <img src="https://img.shields.io/badge/LAUNCH_3D_ARCH_SHOWCASE-06B6D4?style=for-the-badge&logo=three.js&logoColor=white" alt="Launch Showcase">
   </a>
 </p>
 
 ---
 
-## ⚡ Neural Core Features
+## ⚡ Neural Core Capabilities
 
-- **Interactive Neural Terminal**: Master 30+ Git protocols with a high-fidelity console simulator.
-- **Mission Control Layout**: Strategic split-screen interface for simultaneous command execution and objective tracking.
-- **Real-Time Visualizer**: Dynamic 3D/2D repository mapping for clear commit history understanding.
-- **Neural Intel Hub**: Command-specific "3 Easy Steps" guides for intuitive learning.
-- **Architectural Scalability**: Built with a modular React + Vite + Firebase stack for production-grade performance.
+<table align="center">
+  <tr>
+    <td align="center"><b>🕹️ Interactive Terminal</b></td>
+    <td align="center"><b>🧊 3D Visualizer</b></td>
+    <td align="center"><b>🛰️ Mission Control</b></td>
+  </tr>
+  <tr>
+    <td>Master 30+ Git protocols with a high-fidelity console simulator.</td>
+    <td>Dynamic 3D/2D repository mapping for clear commit history tracking.</td>
+    <td>Strategic split-screen interface for mission-driven learning.</td>
+  </tr>
+</table>
 
-## 🛠️ Technical Stack
+---
 
-- **Frontend**: React 18, Vite, Sass (Premium Vanilla CSS focus)
-- **State**: Context API + `useReducer` (Mission Control architecture)
-- **Backend**: Firebase Authentication & Firestore (Real-time progress syncing)
-- **Visualization**: Custom SVG/CSS Neural Graphing engine
+## 🛠️ Technical Matrix
+
+| Layer | Technology |
+| :--- | :--- |
+| **Interface** | React 18 & Vite (Neural Aesthetic focus) |
+| **Logic** | Context API & Mission-Driven state management |
+| **Neural Hub** | Three.js Architecture Visualization |
+| **Nexus** | Firebase Real-time Data Synchronization |
 
 ## 🚀 Deployment Protocol
 
-1. `cp .env.example .env`
-2. Configure Firebase Synchronization keys.
-3. `npm install`
-4. `npm run dev`
+```bash
+# 1. Initialize environment
+cp .env.example .env
+
+# 2. Synchronize Neural Keys
+# (Configure your Firebase credentials in .env)
+
+# 3. Deploy Local Core
+npm install
+npm run dev
+```
 
 ---
 
 <p align="center">
-  Built with 💙 for the next generation of architects.
+  <sub>Built for the architects of tomorrow. <br> <b>Neural Core v1.0.4</b></sub>
 </p>
