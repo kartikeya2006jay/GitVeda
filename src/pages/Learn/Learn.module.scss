@@ -73,10 +73,10 @@
 .segmentGlow {
     fill: none;
     stroke: url(#gy-neon-path);
-    stroke-width: 14; // Wider glow
+    stroke-width: 16; // Thicker line
     stroke-linecap: round;
     filter: url(#gy-electric-blur);
-    opacity: 0.35;
+    opacity: 0.24;
     animation: glowPulse 4s ease-in-out infinite;
 }
 
@@ -104,10 +104,10 @@
 .segmentActive {
     fill: none;
     stroke: url(#gy-neon-path);
-    stroke-width: 5;
+    stroke-width: 6;
     stroke-linecap: round;
     stroke-linejoin: round;
-    filter: drop-shadow(0 0 12px rgba(129, 140, 248, 0.8));
+    filter: drop-shadow(0 0 6px rgba(129, 140, 248, 0.45));
     stroke-dasharray: 20 25;
     animation: energyFlow 3.5s linear infinite;
     transition: all 0.4s ease;
