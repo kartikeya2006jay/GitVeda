@@ -27,7 +27,9 @@ export default function App() {
       {user ? (
         <header className="gy-topbar">
           <Link className="gy-brand" to="/">
-            <span className="gy-brand-badge">GY</span>
+            <span className="gy-brand-badge">
+              <img src="/assets/images/gitveda-mark.svg" alt="GitVeda" />
+            </span>
             <span>GitVeda</span>
           </Link>
           <nav className="gy-nav">

@@ -84,6 +84,15 @@ p {
   place-items: center;
   font-family: "JetBrains Mono", monospace;
   background: linear-gradient(120deg, var(--gy-primary), var(--gy-secondary));
+  overflow: hidden;
+  padding: 0;
+}
+
+.gy-brand-badge img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  display: block;
 }
 
 .gy-nav {
