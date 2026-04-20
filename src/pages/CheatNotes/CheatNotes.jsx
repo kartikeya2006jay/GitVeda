@@ -1,5 +1,23 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { gameLevels } from "../../data/levels";
+
+function getKidSteps(command, usage) {
+    return [
+        `1) Open terminal in your project folder.`,
+        `2) Type: ${usage || command}`,
+        "3) Press Enter and then run `git status` to verify."
+    ];
+}
+
+function getSafetyNote(command) {
+    if (command.includes("reset --hard") || command.includes("clean -fd")) {
+        return "Danger command: can delete local work. Check `git status` first.";
+    }
+    if (command.includes("rebase") || command.includes("amend")) {
+        return "Use carefully on shared branches. Prefer using on your own local branch.";
+    }
+    return "Safe for daily use. If unsure, run `git status` before and after.";
+}
 
 const simpleIntel = {
     "git init": {
@@ -187,119 +205,129 @@ export default function CheatNotes() {
     const [search, setSearch] = useState("");
     const [activeId, setActiveId] = useState(1);
 
-    const activeCommand = gameLevels.find(l => l.id === activeId) || gameLevels[0];
-    const intel = simpleIntel[activeCommand.command] || {
-        simple: "A Git command used for specific missions.",
-        usage: activeCommand.command,
-        why: "Because it helps you manage your code history better!",
-        example: "Used during your GitVeda challenges."
-    };
-
-    const filteredLevels = gameLevels.filter(l =>
+    const filteredLevels = gameLevels.filter((l) =>
         l.command.toLowerCase().includes(search.toLowerCase()) ||
         l.mission.toLowerCase().includes(search.toLowerCase())
     );
 
+    const groupedLevels = [
+        { title: "Section 1", subtitle: "Basics 1-10", items: filteredLevels.slice(0, 10) },
+        { title: "Section 2", subtitle: "Workflow 11-20", items: filteredLevels.slice(10, 20) },
+        { title: "Section 3", subtitle: "Advanced 21-30", items: filteredLevels.slice(20, 30) },
+    ];
+
     return (
-        <main style={{
-            display: 'grid',
-            gridTemplateColumns: 'minmax(300px, 400px) 1fr',
-            gap: '1.5rem',
-            height: 'calc(100vh - 120px)',
-            maxWidth: '1400px',
-            margin: '0 auto',
-            padding: '1rem'
-        }}>
-            {/* Sidebar: List of Commands */}
-            <section className="gy-card" style={{ display: 'flex', flexDirection: 'column', padding: '1.25rem', overflow: 'hidden' }}>
-                <header style={{ marginBottom: '1rem' }}>
-                    <h2 style={{ fontSize: '1.5rem', fontWeight: 800, marginBottom: '0.5rem' }}>Git Intelligence</h2>
+        <main className="max-w-[1200px] mx-auto px-4 py-4">
+            <section className="gy-card" style={{ padding: "1rem", border: "1px solid var(--gy-glass-border)" }}>
+                <header style={{ marginBottom: "0.85rem" }}>
+                    <h2 style={{ fontSize: "1.55rem", fontWeight: 800, marginBottom: "0.35rem" }}>Git Cheat Notes</h2>
+                    <p style={{ color: "var(--gy-muted)", fontSize: "0.9rem", marginBottom: "0.65rem" }}>
+                        Click any command and read easy notes directly below it.
+                    </p>
                     <input
                         type="text"
-                        placeholder="Search commands..."
+                        placeholder="Search command or mission..."
                         value={search}
                         onChange={(e) => setSearch(e.target.value)}
                         style={{
-                            width: '100%',
-                            padding: '0.6rem 1rem',
-                            borderRadius: '10px',
-                            background: 'rgba(0,0,0,0.3)',
-                            border: '1px solid var(--gy-glass-border)',
-                            color: '#fff',
-                            fontSize: '0.9rem'
+                            width: "100%",
+                            padding: "0.65rem 0.9rem",
+                            borderRadius: "10px",
+                            background: "rgba(0,0,0,0.3)",
+                            border: "1px solid var(--gy-glass-border)",
+                            color: "#fff",
+                            fontSize: "0.92rem",
                         }}
                     />
                 </header>
 
-                <div style={{ flex: 1, overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '0.5rem', paddingRight: '0.4rem' }}>
-                    {filteredLevels.map(lvl => (
-                        <button
-                            key={lvl.id}
-                            onClick={() => setActiveId(lvl.id)}
-                            style={{
-                                textAlign: 'left',
-                                padding: '0.75rem 1rem',
-                                borderRadius: '12px',
-                                background: activeId === lvl.id ? 'rgba(99, 102, 241, 0.2)' : 'rgba(255,255,255,0.03)',
-                                border: '1px solid',
-                                borderColor: activeId === lvl.id ? 'var(--gy-primary)' : 'transparent',
-                                cursor: 'pointer',
-                                transition: 'all 0.2s ease',
-                                display: 'flex',
-                                justifyContent: 'space-between',
-                                alignItems: 'center'
-                            }}
-                        >
-                            <div style={{ pointerEvents: 'none' }}>
-                                <code style={{ fontWeight: 800, fontSize: '0.9rem', color: activeId === lvl.id ? '#fff' : '#cbd5e1' }}>{lvl.command}</code>
-                                <p style={{ fontSize: '0.75rem', color: 'var(--gy-muted)', marginTop: '0.2rem' }}>{lvl.mission.slice(0, 30)}...</p>
+                <div style={{ display: "grid", gap: "1rem" }}>
+                    {groupedLevels.map((group) => (
+                        <section key={group.title} className="gy-card" style={{ padding: "0.85rem", background: "rgba(10,20,55,0.35)", border: "1px solid rgba(99,102,241,0.2)" }}>
+                            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "0.65rem" }}>
+                                <h3 style={{ margin: 0, fontSize: "1rem", fontWeight: 800 }}>{group.title}</h3>
+                                <span className="gy-pill" style={{ fontSize: "0.72rem" }}>{group.subtitle}</span>
                             </div>
-                            <span style={{ fontSize: '0.65rem', opacity: 0.5, fontWeight: 800 }}>L{lvl.level}</span>
-                        </button>
+
+                            {group.items.length === 0 ? (
+                                <p style={{ margin: 0, color: "var(--gy-muted)", fontSize: "0.85rem" }}>No commands in this section for current search.</p>
+                            ) : (
+                                <div style={{ display: "grid", gap: "0.55rem" }}>
+                                    {group.items.map((lvl) => {
+                                        const intel = simpleIntel[lvl.command] || {
+                                            simple: "A Git command used for specific missions.",
+                                            usage: lvl.command,
+                                            why: "It helps manage your project history.",
+                                            example: "Use this in your Git challenges.",
+                                        };
+                                        const isOpen = activeId === lvl.id;
+                                        const safetyNote = getSafetyNote(lvl.command);
+                                        const easySteps = getKidSteps(lvl.command, intel.usage);
+
+                                        return (
+                                            <article key={lvl.id} style={{ borderRadius: "12px", border: isOpen ? "1px solid var(--gy-primary)" : "1px solid rgba(255,255,255,0.07)", overflow: "hidden", background: isOpen ? "rgba(99,102,241,0.12)" : "rgba(255,255,255,0.02)" }}>
+                                                <button
+                                                    onClick={() => setActiveId((prev) => (prev === lvl.id ? 0 : lvl.id))}
+                                                    style={{
+                                                        width: "100%",
+                                                        textAlign: "left",
+                                                        padding: "0.78rem 0.9rem",
+                                                        background: "transparent",
+                                                        border: "none",
+                                                        color: "inherit",
+                                                        cursor: "pointer",
+                                                        display: "flex",
+                                                        justifyContent: "space-between",
+                                                        alignItems: "center",
+                                                    }}
+                                                >
+                                                    <div>
+                                                        <code style={{ fontWeight: 800, color: "#e2e8f0", fontSize: "0.92rem" }}>{lvl.command}</code>
+                                                        <p style={{ margin: "0.2rem 0 0", color: "var(--gy-muted)", fontSize: "0.78rem" }}>{lvl.mission}</p>
+                                                    </div>
+                                                    <span style={{ fontSize: "0.75rem", opacity: 0.85 }}>{isOpen ? "▲" : "▼"}</span>
+                                                </button>
+
+                                                {isOpen && (
+                                                    <div style={{ padding: "0.9rem", borderTop: "1px solid rgba(255,255,255,0.08)", display: "grid", gap: "0.7rem", background: "rgba(0,0,0,0.18)" }}>
+                                                        <div>
+                                                            <p className="gy-kicker" style={{ marginBottom: "0.35rem", color: "var(--gy-primary)" }}>// SIMPLE</p>
+                                                            <p style={{ margin: 0, fontSize: "0.98rem", color: "#f1f5f9" }}>{intel.simple}</p>
+                                                        </div>
+
+                                                        <div>
+                                                            <p className="gy-kicker" style={{ marginBottom: "0.35rem", color: "#22d3ee" }}>USAGE</p>
+                                                            <div style={{ background: "#050505", border: "1px solid rgba(255,255,255,0.1)", borderRadius: "8px", padding: "0.55rem 0.7rem" }}>
+                                                                <code style={{ color: "#22d3ee" }}>{intel.usage}</code>
+                                                            </div>
+                                                        </div>
+
+                                                        <div style={{ display: "grid", gap: "0.4rem" }}>
+                                                            <p className="gy-kicker" style={{ margin: 0, color: "#10b981" }}>EXAMPLE</p>
+                                                            <p style={{ margin: 0, fontSize: "0.9rem", color: "#cbd5e1" }}>{intel.example}</p>
+                                                            <p className="gy-kicker" style={{ margin: "0.25rem 0 0", color: "#f59e0b" }}>WHY</p>
+                                                            <p style={{ margin: 0, fontSize: "0.9rem", color: "#e2e8f0" }}>{intel.why}</p>
+                                                        </div>
+
+                                                        <div>
+                                                            <p className="gy-kicker" style={{ marginBottom: "0.35rem", color: "#60a5fa" }}>3 EASY STEPS</p>
+                                                            {easySteps.map((step) => (
+                                                                <p key={step} style={{ margin: "0 0 0.25rem", fontSize: "0.86rem", color: "#cbd5e1" }}>{step}</p>
+                                                            ))}
+                                                        </div>
+
+                                                        <p style={{ margin: 0, fontSize: "0.8rem", color: "#fbbf24" }}>
+                                                            <strong>Before run:</strong> {safetyNote}
+                                                        </p>
+                                                    </div>
+                                                )}
+                                            </article>
+                                        );
+                                    })}
+                                </div>
+                            )}
+                        </section>
                     ))}
-                </div>
-            </section>
-
-            {/* Main Content: Bento Grid */}
-            <section style={{ overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '1rem', paddingRight: '0.5rem' }}>
-                <header className="gy-card" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.2), transparent)' }}>
-                    <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
-                        <h1 style={{ fontSize: '2.2rem', fontWeight: 900, fontFamily: 'var(--gy-font-mono)', margin: 0 }}>{activeCommand.command}</h1>
-                        <span className="gy-pill" style={{ background: 'var(--gy-primary)', color: '#fff' }}>MISSION {activeCommand.level}</span>
-                    </div>
-                </header>
-
-                <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>
-                    {/* Simplified Meaning */}
-                    <div className="gy-card" style={{ gridColumn: 'span 2', padding: '1.5rem', borderLeft: '6px solid var(--gy-primary)' }}>
-                        <p className="gy-kicker" style={{ color: 'var(--gy-primary)', marginBottom: '0.5rem' }}>// SIMPLE STORY</p>
-                        <p style={{ fontSize: '1.2rem', lineHeight: 1.5, fontWeight: 400, color: '#f8fafc' }}>{intel.simple}</p>
-                    </div>
-
-                    {/* Usage & Example */}
-                    <div className="gy-card" style={{ padding: '1.5rem' }}>
-                        <p className="gy-kicker" style={{ color: 'var(--gy-secondary)', marginBottom: '0.75rem' }}>// HOW TO USE</p>
-                        <div style={{ background: '#000', padding: '1rem', borderRadius: '12px', border: '1px solid rgba(255,255,255,0.1)', marginBottom: '1rem' }}>
-                            <code style={{ color: 'var(--gy-secondary)', fontSize: '1rem' }}>{intel.usage}</code>
-                        </div>
-                        <p className="gy-kicker" style={{ color: 'var(--gy-muted)', marginBottom: '0.5rem' }}>REAL EXAMPLE:</p>
-                        <p style={{ fontSize: '0.9rem', opacity: 0.8 }}>{intel.example}</p>
-                    </div>
-
-                    {/* Why Cool */}
-                    <div className="gy-card" style={{ padding: '1.5rem', background: 'rgba(16, 185, 129, 0.05)', border: '1px solid rgba(16, 185, 129, 0.2)' }}>
-                        <p className="gy-kicker" style={{ color: 'var(--gy-success)', marginBottom: '0.75rem' }}>// WHY IT'S AWESOME</p>
-                        <p style={{ fontSize: '1.1rem', lineHeight: 1.6 }}>{intel.why}</p>
-                        <div style={{ marginTop: '1.5rem', display: 'flex', alignItems: 'center', gap: '0.5rem', color: 'var(--gy-success)' }}>
-                            <span style={{ fontSize: '1.2rem' }}>✨</span>
-                            <span style={{ fontSize: '0.8rem', fontWeight: 800, letterSpacing: '0.1em' }}>MASTER PROTOCOL</span>
-                        </div>
-                    </div>
-                </div>
-
-                <div className="gy-card" style={{ padding: '1.25rem', background: 'rgba(0,0,0,0.2)', border: '1px solid var(--gy-glass-border)' }}>
-                    <p className="gy-kicker" style={{ fontSize: '0.6rem', opacity: 0.5 }}>MISSION LOG ENTRY</p>
-                    <p style={{ fontSize: '0.85rem', marginTop: '0.5rem' }}>In this mission, you will learn to use <code>{activeCommand.command}</code> to solve: {activeCommand.mission}</p>
                 </div>
             </section>
         </main>
