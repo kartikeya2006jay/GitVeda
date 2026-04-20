@@ -60,35 +60,37 @@
     left: 0;
     width: 100%;
     pointer-events: none;
-    z-index: 1;
+    z-index: 0;
 }
 
-.glowPath {
+.segmentBase {
     fill: none;
-    stroke: var(--gy-primary);
-    stroke-width: 4;
+    stroke: rgba(99, 102, 241, 0.15); // Very subtle dark base
+    stroke-width: 2;
     stroke-linecap: round;
-    filter: drop-shadow(0 0 8px var(--gy-primary));
-    opacity: 0.3;
 }
 
-.activePath {
+.segmentGlow {
     fill: none;
-    stroke: var(--gy-primary);
-    stroke-width: 6;
+    stroke: url(#gy-neon-path);
+    stroke-width: 14; // Wider glow
     stroke-linecap: round;
-    filter: drop-shadow(0 0 15px var(--gy-primary));
-    stroke-dasharray: 20;
-    animation: pathFlow 10s linear infinite;
+    filter: url(#gy-electric-blur);
+    opacity: 0.35;
+    animation: glowPulse 4s ease-in-out infinite;
 }
 
-@keyframes pathFlow {
-    from {
-        stroke-dashoffset: 1000;
+@keyframes glowPulse {
+
+    0%,
+    100% {
+        opacity: 0.25;
+        stroke-width: 12;
     }
 
-    to {
-        stroke-dashoffset: 0;
+    50% {
+        opacity: 0.45;
+        stroke-width: 16;
     }
 }
 
@@ -97,6 +99,50 @@
     width: 100%;
     height: 2500px; // Long scrollable area for 32 nodes
     z-index: 2;
+}
+
+.segmentActive {
+    fill: none;
+    stroke: url(#gy-neon-path);
+    stroke-width: 5;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+    filter: drop-shadow(0 0 12px rgba(129, 140, 248, 0.8));
+    stroke-dasharray: 20 25;
+    animation: energyFlow 3.5s linear infinite;
+    transition: all 0.4s ease;
+}
+
+.segmentCore {
+    fill: none;
+    stroke: #fff; // Bright white core for electric look
+    stroke-width: 1.5;
+    stroke-linecap: round;
+    opacity: 0.9;
+    filter: drop-shadow(0 0 4px #60a5fa);
+    animation: electricFlicker 0.15s infinite alternate;
+}
+
+@keyframes electricFlicker {
+    0% {
+        opacity: 0.7;
+        stroke-width: 1.2;
+    }
+
+    100% {
+        opacity: 1;
+        stroke-width: 1.8;
+    }
+}
+
+@keyframes energyFlow {
+    from {
+        stroke-dashoffset: 90;
+    }
+
+    to {
+        stroke-dashoffset: 0;
+    }
 }
 
 .node {
@@ -108,6 +154,7 @@
     display: flex;
     align-items: center;
     justify-content: center;
+    z-index: 6;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
 
     &::before {
@@ -143,7 +190,7 @@
     font-weight: 800;
     color: var(--gy-muted);
     box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-    z-index: 1;
+    z-index: 2;
 }
 
 .active {

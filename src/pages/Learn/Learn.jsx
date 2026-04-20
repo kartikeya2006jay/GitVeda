@@ -22,6 +22,8 @@ const generateNodes = () => {
 };
 
 const NODES_DATA = generateNodes();
+const MAP_WIDTH = 1000;
+const MAP_HEIGHT = 5000;
 
 export default function Challenges() {
   const navigate = useNavigate();
@@ -35,9 +37,43 @@ export default function Challenges() {
 
   const completionPercent = Math.round(((progress.level - 1) / 30) * 100);
 
-  // Generate SVG path string
-  const pathD = useMemo(() => {
-    return NODES_DATA.map((n, i) => `${i === 0 ? 'M' : 'L'} ${n.x}% ${n.y}`).join(' ');
+  const segmentPaths = useMemo(() => {
+    const NODE_RADIUS_PX = 30; // Matches node half-width for perfect connection
+
+    const normalize = (x, y) => {
+      const len = Math.hypot(x, y) || 1;
+      return { x: x / len, y: y / len };
+    };
+
+    return NODES_DATA.slice(0, -1).map((node, index) => {
+      const nextNode = NODES_DATA[index + 1];
+      const curveStrength = 0.35;
+      const startX = (node.x / 100) * MAP_WIDTH;
+      const startY = node.y;
+      const endX = (nextNode.x / 100) * MAP_WIDTH;
+      const endY = nextNode.y;
+
+      const c1x = startX + (endX - startX) * curveStrength;
+      const c1y = startY + (endY - startY) * 0.45;
+      const c2x = endX - (endX - startX) * curveStrength;
+      const c2y = endY - (endY - startY) * 0.45;
+
+      // Trim the path so glow starts/ends at node borders.
+      const startTan = normalize(c1x - startX, c1y - startY);
+      const endTan = normalize(endX - c2x, endY - c2y);
+
+      const trimmedStartX = startX + startTan.x * NODE_RADIUS_PX;
+      const trimmedStartY = startY + startTan.y * NODE_RADIUS_PX;
+      const trimmedEndX = endX - endTan.x * NODE_RADIUS_PX;
+      const trimmedEndY = endY - endTan.y * NODE_RADIUS_PX;
+
+      return {
+        id: `${node.id}-${nextNode.id}`,
+        fromLevel: node.level,
+        toLevel: nextNode.level,
+        d: `M ${trimmedStartX} ${trimmedStartY} C ${c1x} ${c1y}, ${c2x} ${c2y}, ${trimmedEndX} ${trimmedEndY}`,
+      };
+    });
   }, []);
 
   return (
@@ -46,15 +82,47 @@ export default function Challenges() {
       <section className={styles.mapViewport} ref={viewportRef}>
         <div className={styles.nodesLayer}>
           {/* SVG Connection Path */}
-          <svg className={styles.svgLayer} style={{ height: '5000px' }}>
-            <path d={pathD} className={styles.glowPath} />
-            <motion.path
-              d={pathD}
-              className={styles.activePath}
-              initial={{ pathLength: 0 }}
-              animate={{ pathLength: progress.level / 32 }}
-              transition={{ duration: 2, ease: "easeInOut" }}
-            />
+          <svg className={styles.svgLayer} viewBox={`0 0 ${MAP_WIDTH} ${MAP_HEIGHT}`} preserveAspectRatio="none" style={{ height: '5000px' }}>
+            <defs>
+              <linearGradient id="gy-neon-path" x1="0%" y1="0%" x2="100%" y2="0%">
+                <stop offset="0%" stopColor="#60a5fa" stopOpacity="0.4" />
+                <stop offset="50%" stopColor="#c084fc" stopOpacity="0.9" />
+                <stop offset="100%" stopColor="#818cf8" stopOpacity="0.4" />
+              </linearGradient>
+              <filter id="gy-electric-blur" x="-100%" y="-100%" width="300%" height="300%">
+                <feGaussianBlur stdDeviation="6" result="blur" />
+                <feComposite in="SourceGraphic" in2="blur" operator="over" />
+              </filter>
+            </defs>
+
+            {segmentPaths.map((segment) => {
+              const isProgressed = progress.level >= segment.toLevel;
+
+              return (
+                <g key={segment.id}>
+                  {/* Base track */}
+                  <path d={segment.d} className={styles.segmentBase} />
+
+                  {/* Ambient Glow layer */}
+                  <path d={segment.d} className={styles.segmentGlow} />
+
+                  {/* Interactive Electric layer */}
+                  <path
+                    d={segment.d}
+                    className={styles.segmentActive}
+                    style={{ opacity: isProgressed ? 1 : 0.15 }}
+                  />
+
+                  {/* Sharp Electric Core (Only for progressed) */}
+                  {isProgressed && (
+                    <path
+                      d={segment.d}
+                      className={styles.segmentCore}
+                    />
+                  )}
+                </g>
+              );
+            })}
           </svg>
 
           {/* Mission Nodes */}
