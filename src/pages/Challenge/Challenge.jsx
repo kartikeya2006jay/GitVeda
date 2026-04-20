@@ -44,6 +44,13 @@ export default function Challenge() {
     setAnswer("");
   }, [levelId, progress.missionPerformance]);
 
+  useEffect(() => {
+    document.body.classList.add("gy-lock-scroll");
+    return () => {
+      document.body.classList.remove("gy-lock-scroll");
+    };
+  }, []);
+
   const handleHintRequest = async () => {
     if (isHintLoading) return;
 
@@ -130,7 +137,7 @@ export default function Challenge() {
   };
 
   return (
-    <main style={{ display: 'grid', gridTemplateRows: 'auto 1fr', gap: '1.5rem', height: 'calc(100vh - 120px)' }}>
+    <main className="gy-challenge-page" style={{ display: 'grid', gridTemplateRows: 'auto 1fr', gap: '1.5rem' }}>
       {isSuccess && (
         <div style={{
           position: 'fixed', inset: 0, background: 'rgba(2, 6, 23, 0.9)',
@@ -150,9 +157,9 @@ export default function Challenge() {
         </div>
       )}
 
-      <div style={{ display: 'grid', gridTemplateColumns: '1fr 420px', gap: '1.5rem', minHeight: 0 }}>
+      <div className="gy-challenge-shell">
         {/* LEFT SIDE: THE WORKSPACE */}
-        <section style={{ display: 'grid', gridTemplateRows: '1fr auto', gap: '1rem', minHeight: 0 }}>
+        <section className="gy-challenge-workspace">
           <div className="gy-card" style={{ padding: 0, overflow: 'hidden', border: '1px solid var(--gy-glass-border)', display: 'flex', flexDirection: 'column' }}>
             <div style={{ padding: '0.75rem 1rem', background: 'rgba(255,255,255,0.03)', borderBottom: '1px solid var(--gy-glass-border)', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
               <div style={{ display: 'flex', gap: '0.5rem' }}>
@@ -194,8 +201,8 @@ export default function Challenge() {
         </section>
 
         {/* RIGHT SIDE: MISSION CONTROL */}
-        <aside style={{ display: 'flex', flexDirection: 'column', gap: '1.5rem', overflowY: 'auto', paddingRight: '0.5rem' }}>
-          <section className="gy-card" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0,0,0,0.4))', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
+        <aside className="gy-mission-control-scroll">
+          <section className="gy-card gy-mission-card" style={{ padding: '1.5rem', background: 'linear-gradient(135deg, rgba(99, 102, 241, 0.1), rgba(0,0,0,0.4))', border: '1px solid rgba(99, 102, 241, 0.2)' }}>
             <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'flex-start', marginBottom: '1rem' }}>
               <div>
                 <p className="gy-kicker" style={{ color: 'var(--gy-primary)', letterSpacing: '0.4em' }}>MISSION CONTROL</p>
@@ -271,7 +278,7 @@ export default function Challenge() {
           </section>
 
           {/* MISSION PERFORMANCE INSTEAD OF REPO VISUALIZER */}
-          <section className="gy-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', flex: 1, minHeight: '220px' }}>
+          <section className="gy-card gy-mission-card" style={{ padding: '1.5rem', display: 'flex', flexDirection: 'column', gap: '1rem', minHeight: '220px' }}>
             <p className="gy-kicker" style={{ marginBottom: '0.5rem', color: 'var(--gy-primary)' }}>MISSION PERFORMANCE</p>
 
             <div style={{ display: 'grid', gridTemplateColumns: '1fr 1fr', gap: '1rem' }}>

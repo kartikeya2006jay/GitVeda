@@ -836,6 +836,10 @@ body {
     linear-gradient(180deg, #10254d, #050b18 65%);
 }
 
+body.gy-lock-scroll {
+  overflow: hidden;
+}
+
 .gy-card {
   background: var(--gy-card-bg);
   border: 1px solid var(--gy-card-border);
@@ -984,6 +988,82 @@ body {
 .gy-term-out {
   min-height: 380px;
   background: #04070f;
+}
+
+.gy-challenge-page {
+  height: calc(100dvh - 128px);
+  min-height: 0;
+  overflow: hidden;
+}
+
+.gy-challenge-shell {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 420px;
+  gap: 1.5rem;
+  min-height: 0;
+  height: 100%;
+}
+
+.gy-challenge-workspace {
+  display: grid;
+  grid-template-rows: minmax(0, 1fr) auto;
+  gap: 1rem;
+  min-height: 0;
+}
+
+.gy-mission-control-scroll {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  min-height: 0;
+  height: 100%;
+  overflow-y: auto;
+  overflow-x: hidden;
+  padding-right: 0.5rem;
+  scrollbar-gutter: stable;
+  overscroll-behavior: contain;
+  -webkit-overflow-scrolling: touch;
+}
+
+.gy-mission-control-scroll .gy-mission-card {
+  flex: 0 0 auto;
+  min-height: fit-content;
+}
+
+.gy-mission-control-scroll::-webkit-scrollbar {
+  width: 10px;
+}
+
+.gy-mission-control-scroll::-webkit-scrollbar-track {
+  background: rgba(15, 23, 42, 0.45);
+  border-radius: 999px;
+}
+
+.gy-mission-control-scroll::-webkit-scrollbar-thumb {
+  background: rgba(99, 102, 241, 0.55);
+  border-radius: 999px;
+  border: 2px solid rgba(15, 23, 42, 0.45);
+}
+
+@media (max-width: 1220px) {
+  .gy-challenge-shell {
+    grid-template-columns: minmax(0, 1fr) 380px;
+  }
+}
+
+@media (max-width: 980px) {
+  .gy-challenge-page {
+    height: calc(100dvh - 122px);
+  }
+
+  .gy-challenge-shell {
+    grid-template-columns: minmax(0, 1fr);
+    grid-template-rows: minmax(0, 1fr) minmax(220px, 42dvh);
+  }
+
+  .gy-mission-control-scroll {
+    padding-right: 0.3rem;
+  }
 }
 
 @media (max-width: 920px) {
