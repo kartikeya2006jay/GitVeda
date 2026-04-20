@@ -354,9 +354,9 @@ export default function CheatNotes() {
     );
 
     const groupedLevels = [
-        { title: "Section 1", subtitle: "Basics 1-10", items: filteredLevels.slice(0, 10) },
-        { title: "Section 2", subtitle: "Workflow 11-20", items: filteredLevels.slice(10, 20) },
-        { title: "Section 3", subtitle: "Advanced 21-30", items: filteredLevels.slice(20, 30) },
+        { title: "Section 1", subtitle: "Basics 1-10", items: filteredLevels.filter((l) => l.id >= 1 && l.id <= 10) },
+        { title: "Section 2", subtitle: "Workflow 11-20", items: filteredLevels.filter((l) => l.id >= 11 && l.id <= 20) },
+        { title: "Section 3", subtitle: "Advanced 21-30", items: filteredLevels.filter((l) => l.id >= 21 && l.id <= 30) },
     ];
 
     return (
