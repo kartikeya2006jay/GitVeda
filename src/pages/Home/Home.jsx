@@ -41,26 +41,6 @@ export default function Home() {
           <p className="gy-muted">Deep technical documentation for every command at your fingertips. No more guessing.</p>
         </article>
       </div>
-
-      <section className="gy-card" style={{
-        background: 'linear-gradient(90deg, rgba(99, 102, 241, 0.1), transparent)',
-        display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '3rem'
-      }}>
-        <div>
-          <p className="gy-kicker" style={{ color: 'var(--gy-primary)' }}>SYSTEM STATUS</p>
-          <h2 style={{ fontSize: '2.2rem', fontWeight: 900 }}>READY FOR DEPLOYMENT</h2>
-        </div>
-        <div style={{ display: 'flex', gap: '3rem' }}>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-muted" style={{ fontSize: '0.8rem' }}>OPERATORS</p>
-            <p style={{ fontSize: '1.8rem', fontWeight: 800 }}>24,930</p>
-          </div>
-          <div style={{ textAlign: 'center' }}>
-            <p className="gy-muted" style={{ fontSize: '0.8rem' }}>COMMITS</p>
-            <p style={{ fontSize: '1.8rem', fontWeight: 800 }}>1.2M+</p>
-          </div>
-        </div>
-      </section>
     </main>
   );
 }
