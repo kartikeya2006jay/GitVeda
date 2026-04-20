@@ -53,7 +53,7 @@ export default function Dashboard() {
             {progress.level <= 10 ? " foundational" : progress.level <= 20 ? " advanced" : " expert"}.
             Prepare for next synchronization.
           </p>
-          <Link to="/challenges" className="gy-btn" style={{ width: '100%', textAlign: 'center' }}>DEPLOY TO ARENA</Link>
+          <Link to="/challenges" className="gy-btn" style={{ width: '100%', textAlign: 'center' }}>GO TO CHALLENGE</Link>
         </section>
       </div>
 

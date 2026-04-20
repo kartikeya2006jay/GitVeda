@@ -29,7 +29,7 @@ function LevelCard({ level, isLocked }) {
         <span style={{ fontSize: '0.7rem', color: 'var(--gy-muted)' }}>Lvl {level.level}</span>
       </div>
 
-      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: 'var(--gy-font-mono)' }}>{level.command}</h3>
+      <h3 style={{ fontSize: '1.1rem', marginBottom: '0.5rem', fontFamily: 'var(--gy-font-mono)' }}>{level.title}</h3>
       <p style={{ fontSize: '0.8rem', color: 'var(--gy-muted)', lineHeight: 1.4 }}>{level.mission}</p>
 
       {isLocked && (

@@ -19,8 +19,8 @@ export default function Home() {
         </p>
 
         <div style={{ display: 'flex', justifyContent: 'center', gap: '1.5rem' }}>
-          <Link to="/challenges" className="gy-btn" style={{ padding: '1.25rem 3rem', fontSize: '1.1rem' }}>INITIALIZE MISSION</Link>
-          <Link to="/cheat-notes" className="gy-btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--gy-glass-border)', padding: '1.25rem 3rem', fontSize: '1.1rem' }}>ACCESS INTEL</Link>
+          <Link to="/challenges" className="gy-btn" style={{ padding: '1.25rem 3rem', fontSize: '1.1rem' }}>GO TO CHALLENGE</Link>
+          <Link to="/git-cheat-notes" className="gy-btn" style={{ background: 'rgba(255,255,255,0.05)', border: '1px solid var(--gy-glass-border)', padding: '1.25rem 3rem', fontSize: '1.1rem' }}>REVISE CONCEPT</Link>
         </div>
       </section>
 
