@@ -1,69 +1,89 @@
-<p align="center">
-  <img src="./public/assets/images/hero.png" width="100%" alt="GitVeda Neural Core">
-</p>
+<div align="center">
 
-<h1 align="center">🌌 GITVEDA 🌌</h1>
+<img src="./public/assets/images/hero.png" width="100%" alt="GitVeda Neural Core">
 
-<p align="center">
-  <strong>The Ultimate Neural Learning Platform for Next-Gen Developers.</strong><br>
-  <em>Gamified Git Mastery through 3D Visualization and Mission-Driven Command Interaction.</em>
-</p>
+# 🌌 GITVEDA
 
-<p align="center">
-  <img src="https://img.shields.io/badge/CORE_SYSTEM-ACTIVE-6366f1?style=for-the-badge&logoCharColor=white" alt="System Status">
-  <img src="https://img.shields.io/badge/ARCH-NEURAL-06b6d4?style=for-the-badge" alt="Architecture">
-</p>
+**The Ultimate Neural Learning Platform for Next-Gen Architects.**
+*Level Up your Git Intelligence with 3D Visualizations and Mission-Driven Interaction.*
 
-<p align="center">
-  <a href="./SHOWCASE.html">
-    <img src="https://img.shields.io/badge/LAUNCH_3D_ARCH_SHOWCASE-06B6D4?style=for-the-badge&logo=three.js&logoColor=white" alt="Launch Showcase">
-  </a>
-</p>
+[![System Status](https://img.shields.io/badge/CORE_SYSTEM-ACTIVE-6366f1?style=for-the-badge&logoCharColor=white)](#)
+[![Architecture](https://img.shields.io/badge/ARCH-NEURAL-06b6d4?style=for-the-badge)](#)
+[![License](https://img.shields.io/badge/LICENSE-MIT-f59e0b?style=for-the-badge)](#)
 
 ---
 
-## ⚡ Neural Core Capabilities
-
-<table align="center">
-  <tr>
-    <td align="center"><b>🕹️ Interactive Terminal</b></td>
-    <td align="center"><b>🧊 3D Visualizer</b></td>
-    <td align="center"><b>🛰️ Mission Control</b></td>
-  </tr>
-  <tr>
-    <td>Master 30+ Git protocols with a high-fidelity console simulator.</td>
-    <td>Dynamic 3D/2D repository mapping for clear commit history tracking.</td>
-    <td>Strategic split-screen interface for mission-driven learning.</td>
-  </tr>
-</table>
+### [ 🛸 LAUNCH 3D ARCHITECTURE SHOWCASE ](./SHOWCASE.html)
 
 ---
 
-## 🛠️ Technical Matrix
+</div>
 
-| Layer | Technology |
-| :--- | :--- |
-| **Interface** | React 18 & Vite (Neural Aesthetic focus) |
-| **Logic** | Context API & Mission-Driven state management |
-| **Neural Hub** | Three.js Architecture Visualization |
-| **Nexus** | Firebase Real-time Data Synchronization |
+## 🧬 Neural Core Dimensions
 
-## 🚀 Deployment Protocol
+| Dimension | Neural Capability | Level |
+| :--- | :--- | :--- |
+| **🕹️ TERMINAL** | Master 30+ Git protocols via high-fidelity console simulation. | **PLATINUM** |
+| **🧊 VISUALS** | Dynamic 3D repository mapping & real-time commit graphing. | **ELITE** |
+| **🛰️ MISSIONS** | Split-screen workflow integration for zero-latency execution. | **SUPREME** |
+| **🧠 INTEL** | Command-specific intelligence modules [3 Easy Steps]. | **KNOWLEDGE+** |
+
+---
+
+## 🏛️ System Architecture
+
+```mermaid
+graph TD
+  User((Developer)) -->|Commands| TC[Terminal Core]
+  TC -->|Sync| GC[Game Logic Hub]
+  GC -->|Viz| GV[Graph Visualizer]
+  GC -->|Intel| IH[Intel Hub]
+  User -->|Strategy| MC[Mission Control]
+  MC -->|Sync| GC
+  GC -->|Auth| FA[Firebase Auth]
+  GC -->|State| FS[Firestore Nexus]
+```
+
+---
+
+## 🛠️ Tech Matrix
+
+- **CORE**: `React 18` | `Vite` | `Neural SCSS`
+- **STATE**: `Context API` | `useReducer`
+- **NEXUS**: `Firebase Auth` | `Firestore`
+- **RENDER**: `Three.js` (Showcase) | `SVG/Canvas` (Visualizer)
+
+---
+
+## 🚀 Accessing the Nexus
+
+### 1. Initialize Neural Interface
+Clone the repository and enter the local core.
 
 ```bash
-# 1. Initialize environment
+git clone https://github.com/kartikeya2006jay/GitVeda.git
+cd GitVeda
+```
+
+### 2. Configure Subsystems
+Duplicate the environment template and inject your Firebase credentials.
+
+```bash
 cp .env.example .env
+# Edit .env with your Neural Synchronization Keys
+```
 
-# 2. Synchronize Neural Keys
-# (Configure your Firebase credentials in .env)
+### 3. Deploy Local Node
+Initialize dependencies and launch the dev environment.
 
-# 3. Deploy Local Core
+```bash
 npm install
 npm run dev
 ```
 
 ---
 
-<p align="center">
-  <sub>Built for the architects of tomorrow. <br> <b>Neural Core v1.0.4</b></sub>
-</p>
+<div align="center">
+  <p><sub>Built with 💙 by <b>Antigravity</b> for the next generation of architects.</sub></p>
+  <p><b>Neural Core v1.0.4</b></p>
+</div>
